@@ -1,5 +1,5 @@
 CC = gcc
-OUTPUT=program
+OUTPUT=main
 FLAGS=-lGL -lGLU -lglut -lm
 #all:
 #		$(CC) *.c */*.c -lGL -lGLU -lglut -lm -o main
