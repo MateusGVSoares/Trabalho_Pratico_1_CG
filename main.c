@@ -29,6 +29,18 @@ typedef struct Object
     GLubyte color[3];
 } Object_t;
 
+typedef struct Key
+{
+    int w;
+    int a;
+    int s;
+    int d;
+    int up;
+    int down;
+    int left;
+    int right;
+} keyboard_t;
+
 void updateModel(Object_t *);
 
 // Velocidade de movimento do player
@@ -40,7 +52,7 @@ Object_t *elementList;
 
 GLuint auxiliary_list;
 
-int key_status[4];
+keyboard_t keyboard;
 
 float razaoAspecto = 0;
 
@@ -63,31 +75,60 @@ void keyboardFct(unsigned char key, int x, int y)
     {
     case 'w':
 
-        if (key_status[0])
-            key_status[0] = 0;
+        if (keyboard.w)
+            keyboard.w = 0;
         else
-            key_status[0] = 1;
+            keyboard.w = 1;
         break;
     case 'a':
-        if (key_status[1])
-            key_status[1] = 0;
+        if (keyboard.a)
+            keyboard.a = 0;
         else
-            key_status[1] = 1;
+            keyboard.a = 1;
         break;
     case 's':
-        if (key_status[2])
-            key_status[2] = 0;
+        if (keyboard.s)
+            keyboard.s = 0;
         else
-            key_status[2] = 1;
+            keyboard.s = 1;
         break;
     case 'd':
-        if (key_status[3])
-            key_status[3] = 0;
+        if (keyboard.d)
+            keyboard.d = 0;
         else
-            key_status[3] = 1;
+            keyboard.d = 1;
         break;
-    case 0x27:
-        exit(0);
+    }
+}
+
+// Callback para pressionamento de Teclas Especiais
+void keyboardSpecial(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_UP:
+        if (keyboard.up)
+            keyboard.up = 0;
+        else
+            keyboard.up = 1;
+        break;
+    case GLUT_KEY_DOWN:
+        if (keyboard.down)
+            keyboard.down = 0;
+        else
+            keyboard.down = 1;
+        break;
+    case GLUT_KEY_LEFT:
+        if (keyboard.left)
+            keyboard.left = 0;
+        else
+            keyboard.left = 1;
+        break;
+    case GLUT_KEY_RIGHT:
+        if (keyboard.right)
+            keyboard.right = 0;
+        else
+            keyboard.right = 1;
         break;
     }
 }
@@ -516,9 +557,9 @@ void playerMovement()
     // vec2f_t vtec;
 
     // Verifica ser w e s estão sendo pressionados
-    float x_movement = key_status[0] - key_status[2];
+    float x_movement = (keyboard.w || keyboard.up) - (keyboard.down || keyboard.s);
     // Verifica ser a e d estão sendo pressionados
-    float y_movement = key_status[1] - key_status[3];
+    float y_movement = (keyboard.a || keyboard.left) - (keyboard.d || keyboard.right);
 
     // Verifica a rotação e calcula a direção do movimento
     player->angle += y_movement * 5;
@@ -972,6 +1013,9 @@ void myInit()
     glutReshapeFunc(reshapeFct);
     glutKeyboardFunc(keyboardFct);
     glutKeyboardUpFunc(keyboardFct);
+    glutSpecialFunc(keyboardSpecial);
+    glutSpecialUpFunc(keyboardSpecial);
+
     glutTimerFunc(TICK_TIME, timerFct, TICK_TIME);
 
     // Configura o OpenGL
