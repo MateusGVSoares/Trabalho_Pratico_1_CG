@@ -81,7 +81,7 @@ void keyboardFct(unsigned char key, int x, int y)
             keyboard.w = 1;
         break;
     case 'a':
-        if (keyboard.a)
+        if (keyboard.a == 1)
             keyboard.a = 0;
         else
             keyboard.a = 1;
@@ -948,12 +948,9 @@ void timerFct(int time)
         elementList[9].origin.y = -90;
         endGameFlag = 0;
     }
-    // Movimenta o player
     playerMovement();
-
     movimentEnemy();
     movimentEnemyBike();
-    // TODO : ATUALIZA O MOVIMENTO DOS INIMIGOS
 
     // Atualiza os modelos dos objetos e inimigos
     for (int i = 0; i < 10; i++)
@@ -992,13 +989,8 @@ void timerFct(int time)
     // Desenha os objetos
     glutPostRedisplay();
 
-    if (endGameFlag)
-    {
-        glutTimerFunc(1000, timerFct, time);
-    }
-    else
-        // Restarts the timer
-        glutTimerFunc(time, timerFct, time);
+    // Restarts the timer
+    glutTimerFunc(endGameFlag != 0 ? 1000 : time, timerFct, time);
 }
 
 void myInit()
