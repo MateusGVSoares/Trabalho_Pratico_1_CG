@@ -909,8 +909,8 @@ void movimentEnemyBike()
     vec2f_t aux;
     for (int i = 8; i < 10; i++)
     {
-        elementList[i].direction.x = aux.x = player->origin.x - elementList[i].origin.x;
-        elementList[i].direction.y = aux.y = player->origin.y - elementList[i].origin.y;
+        aux.x = player->origin.x - elementList[i].origin.x;
+        aux.y = player->origin.y - elementList[i].origin.y;
 
         angle = (180.0f / M_PI) * atan(aux.y / aux.x);
 
