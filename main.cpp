@@ -7,6 +7,8 @@
 #include "include/classes/Entidade.h"
 #include "include/parser.h"
 
+
+// vamos meu camisa 9
 Player *joga;
 
 void drawUpdate()
