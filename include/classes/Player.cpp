@@ -76,6 +76,7 @@ void Player::draw()
     glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < this->model.size(); i++)
     {
+         //chamar a gl texture pelo metodo que foi herdado do texturazer
         glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
     }
     glEnd();

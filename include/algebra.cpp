@@ -64,7 +64,6 @@ Matrix_t *multiply_matrix(Matrix_t matriz_1, Matrix_t matriz_2)
     if (matriz_1.col != matriz_2.row)
     {
         // Sem esse printf o código n funciona >_<
-        // printf("Laura eu te amo ! \n");
         return NULL;
     }
 
