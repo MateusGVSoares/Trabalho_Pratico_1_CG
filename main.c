@@ -22,11 +22,11 @@ typedef struct Object
     int draw_list;
     int onScreen;
     float angle;
-    vec2f_t origin;
-    vec2f_t direction;
-    vec2f_t model[4];
-    vec2f_t box[4];
-    GLubyte color[3];
+    vec2f_t origin;    // Posicao do player
+    vec2f_t direction; // Vetor de direção
+    vec2f_t model[4];  // Modelo na origem
+    vec2f_t box[4];    // Modelo transladado e rotacionado
+    GLubyte color[3];  // Cor
 } Object_t;
 
 typedef struct Key
@@ -65,74 +65,6 @@ void printText(float x, float y, void *font, char *string, GLubyte red, GLubyte 
     glutBitmapString(font, string);
 }
 
-// Callback para pressionamento do teclado
-void keyboardFct(unsigned char key, int x, int y)
-{
-#ifdef DEBUG
-    printf("Keyboard Callback [%s] : Key [%c] | Mouse_Pos [%d][%d]\n", __func__, key, x, y);
-#endif
-    switch (key)
-    {
-    case 'w':
-
-        if (keyboard.w)
-            keyboard.w = 0;
-        else
-            keyboard.w = 1;
-        break;
-    case 'a':
-        if (keyboard.a == 1)
-            keyboard.a = 0;
-        else
-            keyboard.a = 1;
-        break;
-    case 's':
-        if (keyboard.s)
-            keyboard.s = 0;
-        else
-            keyboard.s = 1;
-        break;
-    case 'd':
-        if (keyboard.d)
-            keyboard.d = 0;
-        else
-            keyboard.d = 1;
-        break;
-    }
-}
-
-// Callback para pressionamento de Teclas Especiais
-void keyboardSpecial(int key, int x, int y)
-{
-    switch (key)
-    {
-    case GLUT_KEY_UP:
-        if (keyboard.up)
-            keyboard.up = 0;
-        else
-            keyboard.up = 1;
-        break;
-    case GLUT_KEY_DOWN:
-        if (keyboard.down)
-            keyboard.down = 0;
-        else
-            keyboard.down = 1;
-        break;
-    case GLUT_KEY_LEFT:
-        if (keyboard.left)
-            keyboard.left = 0;
-        else
-            keyboard.left = 1;
-        break;
-    case GLUT_KEY_RIGHT:
-        if (keyboard.right)
-            keyboard.right = 0;
-        else
-            keyboard.right = 1;
-        break;
-    }
-}
-
 // Callback para redimensionamento
 void reshapeFct(int width, int height)
 {
@@ -150,36 +82,6 @@ void reshapeFct(int width, int height)
     glOrtho(-100 * razaoAspecto, 100 * razaoAspecto, -100, 100, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-    // Movimenta a parede do mundo na horizontal em X
-    elementList[0].origin.x = 101 * razaoAspecto;
-    elementList[2].origin.x = -101 * razaoAspecto;
-
-    // aumenta os pontos do modelo das paredes verticais
-    for (int i = 0; i < 4; i++)
-    {
-        elementList[1].model[i].y *= razaoAspecto;
-        elementList[3].model[i].y *= razaoAspecto;
-    }
-}
-
-void calc_direction(Object_t *target)
-{
-    target->direction.x = cos(target->angle * M_PI / 180.0f);
-    target->direction.y = sin(target->angle * M_PI / 180.0f);
-}
-
-void rotate_vec(vec2f_t *target, float angle)
-{
-    float x = target->x, y = target->y;
-    target->x = x * cos(angle * M_PI / 180.0f) - y * sin(angle * M_PI / 180.0f);
-    target->y = x * sin(angle * M_PI / 180.0f) + y * cos(angle * M_PI / 180.0f);
-}
-
-void translate_vec(vec2f_t *target, vec2f_t vector)
-{
-    target->x += vector.x;
-    target->y += vector.y;
 }
 
 void createListsPlayer()
@@ -839,9 +741,15 @@ int colideStatic(Object_t *obj_1, Object_t *obj_2)
             edge_s = obj_2->box[j];
             edge_e = obj_2->box[(j + 1) % 4];
 
-            limit = (edge_e.x - edge_s.x) * (diag_s.y - diag_e.y) - (diag_s.x - diag_e.x) * (edge_e.y - edge_s.y);
-            det_1 = ((edge_s.y - edge_e.y) * (diag_s.x - edge_s.x) + (edge_e.x - edge_s.x) * (diag_s.y - edge_s.y)) / limit;
-            det_2 = ((diag_s.y - diag_e.y) * (diag_s.x - edge_s.x) + (diag_e.x - diag_s.x) * (diag_s.y - edge_s.y)) / limit;
+            limit = (edge_e.x - edge_s.x) * (diag_s.y - diag_e.y) -
+                    (diag_s.x - diag_e.x) * (edge_e.y - edge_s.y);
+
+            det_1 = ((edge_s.y - edge_e.y) * (diag_s.x - edge_s.x) +
+                     (edge_e.x - edge_s.x) * (diag_s.y - edge_s.y)) /
+                    limit;
+            det_2 = ((diag_s.y - diag_e.y) * (diag_s.x - edge_s.x) +
+                     (diag_e.x - diag_s.x) * (diag_s.y - edge_s.y)) /
+                    limit;
 
             if (det_1 >= 0.0f && det_1 < 1.0f && det_2 >= 0.0f && det_2 < 1.0f)
             {
