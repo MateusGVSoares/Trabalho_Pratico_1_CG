@@ -1,27 +1,35 @@
 #ifndef __WORLD__
 #define __WORLD__
 
+#include "../parser.h"
+#include <bits/stdc++.h>
 
-//classe mundo que vai gerenciar o roteiro das missoes e os objetos chamando as outras classes
+// classe mundo que vai gerenciar o roteiro das missoes e os objetos chamando as outras classes
 
-class World{
+class World
+{
 
-
+private:
+    std::queue<std::vector<mission_wave>> stack_mission;
+    // wave 1, wave 2 , wave 3
 
 public:
+    World();
 
-//metodo para a missao 1
-// void start_mission();
-//metodo para a missao 2 +chefao
+    // botar os roteiros das missions na queue para poder usar a start_mission
+    void initialize_script_mission();
 
-//metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
+    // metodo que initicializa as missões
+    void start_mission(std::queue<std::vector<mission_wave>> mission);
 
-//metodo menu 
+    // metodo que trata as fases que estao no script
+    void mission_handler(std::vector<mission_wave> fase_script);
 
+    // metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
+    void send_to_colider(std::vector<Entidade>);
 
+    // metodo menu
+    void show_menu();
 };
-
-
-
 
 #endif

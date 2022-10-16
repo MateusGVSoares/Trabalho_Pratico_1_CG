@@ -10,6 +10,7 @@ void keyboardFct(unsigned char key, int x, int y)
 #ifdef DEBUG
     printf("Keyboard Callback [%s] : Key [%c] | Mouse_Pos [%d][%d]\n", __func__, key, x, y);
 #endif
+
     switch (key)
     {
     case 'w':
@@ -37,12 +38,22 @@ void keyboardFct(unsigned char key, int x, int y)
         else
             keyboard.d = 1;
         break;
+    case ' ':
+        if (keyboard.space)
+            keyboard.space = 0;
+        else
+            keyboard.space = 1;
+        break;
     }
 }
 
 // Callback para pressionamento de Teclas Especiais
 void keyboardSpecial(int key, int x, int y)
 {
+#ifdef DEBUG
+    printf("Keyboard Callback [%s] : Key [%c] | Mouse_Pos [%d][%d]\n", __func__, key, x, y);
+#endif
+
     switch (key)
     {
     case GLUT_KEY_UP:

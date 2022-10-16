@@ -2,23 +2,15 @@
 
 #define DRAW_BOX
 
-Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model) : Entidade()
+Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model) : Entidade(origin, layer, angle, velocidade)
 {
-    // Inicializa as parada
-    this->origin = origin;
-    this->layer = layer;
-    this->angle = angle;
+    // Let the player handles the model things
     this->model = model;
-
-    // Inicializa o modelo e a HitBox
     this->box_model = hit_box;
     this->hit_box = hit_box;
-
-    // Inicializa a velocidade
-    this->velocidade = velocidade;
 };
 
-void Player::updateOnKeyboard(keyboard_t keys)
+int Player::updateOnKeyboard(keyboard_t keys)
 {
     int x_mov = (keys.d || keys.right) - (keys.left || keys.a);
     int y_mov = (keys.up || keys.w) - (keys.down || keys.s);
@@ -54,12 +46,13 @@ void Player::updateOnKeyboard(keyboard_t keys)
         this->direction.y = y_mov;
     }
 
-
     this->direction.z = 0;
+    return keys.space;
 }
 
 void Player::move()
 {
+    // printf("Player [Velocity : %0.2f, Vec : %0.2f %0.2f %0.2f] \n", this->velocidade, this->origin.x, this->origin.y, this->origin.z);
     // Moves the player using the unitary direction vector
     this->origin.x += this->direction.x * velocidade;
     this->origin.y += this->direction.y * velocidade;
@@ -76,7 +69,7 @@ void Player::draw()
     glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < this->model.size(); i++)
     {
-         //chamar a gl texture pelo metodo que foi herdado do texturazer
+        // chamar a gl texture pelo metodo que foi herdado do texturazer
         glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
     }
     glEnd();
@@ -96,6 +89,18 @@ void Player::draw()
 #endif
 
     // TODO : Apply texture to the player
+}
+
+Shot Player::playerFire()
+{
+    vec3f_t dir = {
+        .x = 0,
+        .y = 1,
+        .z = 0};
+
+    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model);
+
+    return ret_shot;
 }
 
 void Player::treatColide(int col_type)

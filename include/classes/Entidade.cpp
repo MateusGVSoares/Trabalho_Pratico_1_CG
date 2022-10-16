@@ -1,11 +1,17 @@
 #include "Entidade.h"
 
-// Entidade::Entidade(vec3f_t origin, int layer, float angle)
-// {
-//     this->angle = angle;
-//     this->origin = origin;
-//     this->layer = layer;
-// }
+Entidade::Entidade(vec3f_t origin, int layer, float angle, float velocidade)
+{
+    this->origin = origin;
+    this->layer = layer;
+    this->angle = angle;
+    this->velocidade = velocidade;
+}
+
+bool Entidade::getOnScreen()
+{
+    return this->on_screen;
+}
 
 void Entidade::updateModel()
 {
@@ -35,6 +41,8 @@ void Entidade::updateModel()
 
     Matrix_t *result = NULL;
 
+    this->on_screen = 0;
+
     for (int i = 0; i < this->box_model.size(); i++)
     {
         // Pega os pontos do modelo de hit_box na origem
@@ -61,6 +69,11 @@ void Entidade::updateModel()
         // {
         //     std::cout << "Freed !! \n";
         // }
+
+        if(this->hit_box[i].x <= 100 && this->hit_box[i].x >= -100 && this->hit_box[i].y < 100 && this->hit_box[i].y > -100)
+        {
+            this->on_screen = 1;
+        }
     }
 
     glPopMatrix();

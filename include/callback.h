@@ -13,6 +13,7 @@ typedef struct Key
     int down;
     int left;
     int right;
+    int space;
 } keyboard_t;
 
 extern keyboard_t keyboard;

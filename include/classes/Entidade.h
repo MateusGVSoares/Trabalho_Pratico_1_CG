@@ -20,6 +20,8 @@ class Entidade
 protected:
     float angle;
     int layer;
+    bool on_screen;
+    float velocidade;
     vec3f_t origin;
     vec3f_t direction;
     std::vector<vec3f_t> model;     // Modelo gráfico
@@ -28,10 +30,10 @@ protected:
     // TODO : Texture
 
 public:
-    // Entidade(vec3f_t origin, int layer, float angle);
+    Entidade(vec3f_t origin, int layer, float angle,float velocidade);
     void updateModel();
     std::vector<vec3f_t> getModel();
-    
+    bool getOnScreen();
     // Virtual functions
     virtual void move() = 0;
     virtual void draw() = 0;
