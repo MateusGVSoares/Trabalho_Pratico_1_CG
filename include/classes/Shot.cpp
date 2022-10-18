@@ -9,13 +9,14 @@ Shot::Shot(vec3f_t origin,
     float velocidade,
     vec3f_t direction,
     std::vector<vec3f_t> model,
-    std::vector<vec3f_t> hit_box) : Entidade(origin, layer, angle, velocidade)
+    std::vector<vec3f_t> hit_box,int id) : Entidade(origin, layer, angle, velocidade)
 {
     this->model = model;
     this->box_model = hit_box;
     this->hit_box = hit_box;
     this->direction = direction;
     this->to_shot = std::unique_ptr<funcShot>(new funcShot);
+    this->id =id;
 }
 
 void Shot::move()

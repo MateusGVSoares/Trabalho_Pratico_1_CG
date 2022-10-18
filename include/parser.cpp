@@ -1,5 +1,4 @@
 #include "parser.h"
-#include "SOIL.h"
 
 
 // Parser para modelo de arquivo
@@ -163,8 +162,9 @@ int parser_texture(std::vector<GLuint> *target,std::vector<std::pair<GLfloat,GLf
         //pega o nome do arquivo que ta na pasta
         file->getline(input_str, 100);
         //cria ID bota no vector de id passado por referencia
+        printf(" ANTES DO IDTEXTURE\n");
         GLuint idTextura = SOIL_load_OGL_texture("textura_teste.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,SOIL_FLAG_INVERT_Y);
-        
+        printf(" DEPOIS DO IDTEXTURE\n");
         if(idTextura == 0){
             printf("Erro do SOIL:  %s\n", SOIL_last_result());
         }

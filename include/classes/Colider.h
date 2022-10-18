@@ -6,11 +6,11 @@
 //Classe Colider que vai ser responsavel de chamar a colisão
 //e decidir o que sera feito na hora da colisão
 // flags
-//  0  = player
-//  1  = tiro do player
-//  2  = inimigo 
-//  3  = tiro do inimigo
-//  4  = power ups
+//  1  = player
+//  2  = tiro do player
+//  3  = inimigo 
+//  4  = tiro do inimigo
+//  5  = power ups
 // usar smartpointer
 class Colider  //: Hitbox
 {

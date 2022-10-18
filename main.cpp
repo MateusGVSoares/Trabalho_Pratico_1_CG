@@ -2,6 +2,7 @@
 // Libs
 #include <bits/stdc++.h>
 #include <GL/freeglut.h>
+#include <SOIL/SOIL.h>
 #include "include/algebra.h"
 #include "include/callback.h"
 #include "include/parser.h"
@@ -122,12 +123,13 @@ void initPlayer()
     /*if(!parse_texture(%texture_vec,"texture.txt"))
         printf(" DEU BOM NO PARSER DA TEXTURA\n");
     */
+   
     vec3f_t origin = {
         .x = 0,
         .y = 0,
         .z = 0};
 
-    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector,texture_vec,texture_coord);
+    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector,texture_vec,texture_coord,2);
     mundo = new World();
     //mundo->initialize_script_mission();
 }

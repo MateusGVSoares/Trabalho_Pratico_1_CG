@@ -12,13 +12,26 @@ Enemy::Enemy(vec3f_t origin, int layer, float angle, float velocidade, std::vect
     // Inicializa o modelo e a HitBox
     this->box_model = hit_box;
     this->hit_box = hit_box;
-
-    //joga para dentro o Objeto Texturizer que tem as texturas do inimgo
     
+    this->id = 3;
 
     // Inicializa a velocidade
     this->velocidade = velocidade;
 };
+
+Shot Enemy::enemyFire(){
+
+    vec3f_t dir = {
+        .x = 0,
+        .y = 1,
+        .z = 0};
+    //Passa os dados para serem criado o tiro, tiro com id=4 tiro do inimigo para ser tratado no colider
+    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model,4);
+
+    return ret_shot;
+
+}
+
 
 void Enemy::move(){
     

@@ -19,7 +19,7 @@ class Shot : public Entidade
 {
 public:
     std::unique_ptr<funcShot> to_shot;
-    Shot(vec3f_t origin, int layer, float angle, float velocidade, vec3f_t direction, std::vector<vec3f_t> model, std::vector<vec3f_t> hit_box);
+    Shot(vec3f_t origin, int layer, float angle, float velocidade, vec3f_t direction, std::vector<vec3f_t> model, std::vector<vec3f_t> hit_box,int id);
     void draw() override;
     void move() override;
     void treatColide(int col_type) override;

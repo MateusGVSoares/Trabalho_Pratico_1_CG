@@ -3,7 +3,7 @@
 
 //#define DRAW_BOX
 
-Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,std::vector<std::pair<GLfloat,GLfloat>> texture_cord) : Entidade(origin, layer, angle, velocidade),Texturazer(tex_vec,texture_cord)
+Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,std::vector<std::pair<GLfloat,GLfloat>> texture_cord,int id) : Entidade(origin, layer, angle, velocidade),Texturazer(tex_vec,texture_cord)
 {
     // Let the player handles the model things
     this->model = model;
@@ -14,6 +14,8 @@ Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::ve
     //passando tudo para dentro do objeto
     this->texture_cord=texture_cord;
     this->texture_vec=texture_vec;
+    //da o id do player para ser tratado no colider
+    this->id=id;
 };
 
 int Player::updateOnKeyboard(keyboard_t keys)
@@ -113,8 +115,8 @@ Shot Player::playerFire()
         .x = 0,
         .y = 1,
         .z = 0};
-
-    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model);
+    //Passa os dados para serem criado o tiro, tiro com id=2 tiro do player para ser tratado no colider
+    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model,2);
 
     return ret_shot;
 }
