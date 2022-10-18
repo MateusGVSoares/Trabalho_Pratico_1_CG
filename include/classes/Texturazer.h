@@ -1,16 +1,24 @@
-#ifndef __BATATA__
-#define __BATATA__
+#ifndef __TEXTURAZER__
+#define __TEXTURAZER__
 
-class Texturazer
-{
+#include <GL/freeglut.h>
+#include <bits/stdc++.h>
+#include <GL/freeglut.h>
+#include <SOIL/SOIL.h>
 
-    // place holder
-protected:
-    // Gluint aux;
-    // vector<GLUint> batata(2);
 
-public:
-    // construtor
+
+class Texturazer{
+
+    protected:
+        std::vector<GLuint> texture_vec;
+        std::vector<std::pair<GLfloat,GLfloat>> texture_cord;
+    
+    public:
+        Texturazer(std::vector<GLuint> tex_vec,std::vector<std::pair<GLfloat,GLfloat>> texture_cord);
+
 };
+
+
 
 #endif

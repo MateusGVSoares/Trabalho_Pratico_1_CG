@@ -1,13 +1,19 @@
 #include "Player.h"
 
-#define DRAW_BOX
 
-Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model) : Entidade(origin, layer, angle, velocidade)
+//#define DRAW_BOX
+
+Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,std::vector<std::pair<GLfloat,GLfloat>> texture_cord) : Entidade(origin, layer, angle, velocidade),Texturazer(tex_vec,texture_cord)
 {
     // Let the player handles the model things
     this->model = model;
     this->box_model = hit_box;
     this->hit_box = hit_box;
+    //caregando tudo pelo parser
+    parser_texture(&texture_vec,&texture_cord,"TEXTURE_PLAYER.txt");
+    //passando tudo para dentro do objeto
+    this->texture_cord=texture_cord;
+    this->texture_vec=texture_vec;
 };
 
 int Player::updateOnKeyboard(keyboard_t keys)
@@ -66,13 +72,24 @@ void Player::draw()
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
     glColor3ub(234, 55, 43);
-    glBegin(GL_TRIANGLE_FAN);
-    for (int i = 0; i < this->model.size(); i++)
-    {
-        // chamar a gl texture pelo metodo que foi herdado do texturazer
-        glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
-    }
+
+    printf("id=%d\n",this->texture_vec[0]);
+    glBindTexture(GL_TEXTURE_2D, this->texture_vec[0]);
+    glBegin(GL_QUADS);
+        for (int i = 0; i < this->model.size(); i++){
+            if( i == 0)
+                glTexCoord2f(0, 0);
+            if(i == 1)
+                glTexCoord2f(1, 0);
+            if(i == 2)
+                glTexCoord2f(1, 1);
+            if(i == 3)
+                glTexCoord2f(0, 1);
+            
+            glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
+        }
     glEnd();
+        
     glPopMatrix();
 
 #ifdef DRAW_BOX
@@ -88,7 +105,6 @@ void Player::draw()
 
 #endif
 
-    // TODO : Apply texture to the player
 }
 
 Shot Player::playerFire()

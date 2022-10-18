@@ -12,21 +12,28 @@
 #include "include/classes/Shot.h"
 
 // TODO: Classes inacabadas
-// #include "include/classes/World.h"
+ #include "include/classes/World.h"
 // #include "include/classes/Enemy.h"
 // #include "include/classes/Colider.h"
-// #include "include/classes/Texturazer.h"
+ #include "include/classes/Texturazer.h"
 
 // VAMOS MEU CAMISA 09 >_< (Updated by Mateus on 16/08, 11:00:01)
 Player *joga;
 std::vector<Shot> entities;
+World *mundo;
 
 void drawUpdate()
 {
+
     glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     if (joga->getOnScreen())
     {
+        glEnable(GL_TEXTURE_2D);
         joga->draw();
+        glDisable(GL_TEXTURE_2D);
     }
     else
     {
@@ -42,6 +49,7 @@ void drawUpdate()
 }
 
 float timer_count = 0;
+float world_time = 0;
 
 void onTimeUpdate(int time)
 {
@@ -68,8 +76,11 @@ void onTimeUpdate(int time)
 
     // Draws everything <3
     glutPostRedisplay();
-    timer_count += (float)time / 1000;
 
+    //tempo globais para auxiliar a classe World
+    timer_count += (float)time / 1000;
+    world_time += (float)time / 1000;
+    mundo->start_mission(&world_time);
     // Restarts the timerFunc
     glutTimerFunc(time, onTimeUpdate, time);
 }
@@ -102,18 +113,23 @@ void configGlut()
 void initPlayer()
 {
     std::vector<vec3f_t> vector;
-
+    std::vector<GLuint> texture_vec;
+    std::vector<std::pair<GLfloat,GLfloat>> texture_coord;
     if (!parse_model(&vector, "model"))
     {
         printf("DEU BOM NO FILE \n");
     }
-
+    /*if(!parse_texture(%texture_vec,"texture.txt"))
+        printf(" DEU BOM NO PARSER DA TEXTURA\n");
+    */
     vec3f_t origin = {
         .x = 0,
         .y = 0,
         .z = 0};
 
-    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector);
+    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector,texture_vec,texture_coord);
+    mundo = new World();
+    //mundo->initialize_script_mission();
 }
 
 int main(int argc, char **argv)

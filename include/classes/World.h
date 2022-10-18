@@ -4,32 +4,39 @@
 #include "../parser.h"
 #include <bits/stdc++.h>
 
-// classe mundo que vai gerenciar o roteiro das missoes e os objetos chamando as outras classes
+//classe mundo que vai gerenciar o roteiro das missoes e os objetos chamando as outras classes
 
-class World
-{
+class World{
 
 private:
-    std::queue<std::vector<mission_wave>> stack_mission;
+    std::queue<std::list<mission_wave>> stack_mission; 
     // wave 1, wave 2 , wave 3
 
-public:
-    World();
 
-    // botar os roteiros das missions na queue para poder usar a start_mission
+public:
+
+
+    //botar os roteiros das missions na queue para poder usar a start_mission
     void initialize_script_mission();
 
-    // metodo que initicializa as missões
-    void start_mission(std::queue<std::vector<mission_wave>> mission);
+    //metodo que initicializa as missões
+    void start_mission(float *time);
 
-    // metodo que trata as fases que estao no script
-    void mission_handler(std::vector<mission_wave> fase_script);
+    //metodo que trata as fases que estao no script
+    void mission_handler(std::list<mission_wave> *fase_script,float *time);
 
-    // metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
-    void send_to_colider(std::vector<Entidade>);
+    //metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
+    void send_to_colider(std::list<Entidade> vec_hitboxs);
 
-    // metodo menu
+    //metodo menu 
     void show_menu();
+
+    //E VAMOS DE CREDITOS FAMILIA
+    void Credits();
+
 };
+
+
+
 
 #endif
