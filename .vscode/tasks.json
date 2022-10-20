@@ -8,10 +8,10 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "*.cpp ","*/*.cpp ","*/*/*.cpp" ,
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-               "-lGL" ,"-lGLU", "-lglut", "-lSOIL"
+               "-lGL" ,"-lGLU", "-lglut", "-lSOIL","-lGLEW"
             ],
             "options": {
                 "cwd": "${fileDirname}"

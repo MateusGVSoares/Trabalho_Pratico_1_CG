@@ -2,8 +2,7 @@
 #define __TEXTURAZER__
 
 #include <GL/freeglut.h>
-#include <bits/stdc++.h>
-#include <GL/freeglut.h>
+#include <vector>
 #include <SOIL/SOIL.h>
 
 

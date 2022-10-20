@@ -3,8 +3,8 @@
 
 #include "Entidade.h"
 #include "Shot.h"
+#include <vector>
 #include <GL/freeglut.h>
-#include <SOIL/SOIL.h>
 
 class Enemy : public Entidade
 {
@@ -31,15 +31,13 @@ struct iaMovement
     }
 };
 
-private:
-    float velocidade;
-
 public:
-    Enemy(vec3f_t origin, int layer, float angle, float velocidade,std::vector<vec3f_t> hit_box,std::vector<vec3f_t> model);
     using Entidade::Entidade;
+    Enemy(vec3f_t origin, int layer, float angle, float velocidade,std::vector<vec3f_t> hit_box,std::vector<vec3f_t> model);
     Shot enemyFire();
     void move() override;
     void draw() override;
+    bool tadentro();
     void treatColide(int col_type) override;
 };
 

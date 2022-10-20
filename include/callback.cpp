@@ -13,26 +13,37 @@ void keyboardFct(unsigned char key, int x, int y)
 
     switch (key)
     {
-    case 'w':
 
+    case 13:
+        if (keyboard.enter)
+            keyboard.enter = 0;
+        else
+            keyboard.enter = 1;
+        break;
+
+    case 'w':
+    case 'W':
         if (keyboard.w)
             keyboard.w = 0;
         else
             keyboard.w = 1;
         break;
     case 'a':
+    case 'A':
         if (keyboard.a == 1)
             keyboard.a = 0;
         else
             keyboard.a = 1;
         break;
     case 's':
+    case 'S':
         if (keyboard.s)
             keyboard.s = 0;
         else
             keyboard.s = 1;
         break;
     case 'd':
+    case 'D':
         if (keyboard.d)
             keyboard.d = 0;
         else

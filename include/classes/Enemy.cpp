@@ -32,6 +32,10 @@ Shot Enemy::enemyFire(){
 
 }
 
+bool Enemy::tadentro(){
+
+    return 1;
+}
 
 void Enemy::move(){
     

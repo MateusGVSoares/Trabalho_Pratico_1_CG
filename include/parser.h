@@ -1,10 +1,19 @@
 #ifndef __PARSER__
 #define __PARSER__
 
-#include <bits/stdc++.h>
+#ifdef __DEBUG__
+#define__DEBUG__
+#include <stdio.h>
+#endif
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <list>
+
+
 #include "classes/Entidade.h"
-#include <GL/freeglut.h>
-#include <SOIL/SOIL.h>
 
 typedef struct mission{
 

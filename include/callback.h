@@ -14,6 +14,7 @@ typedef struct Key
     int left;
     int right;
     int space;
+    int enter;
 } keyboard_t;
 
 extern keyboard_t keyboard;

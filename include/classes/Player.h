@@ -4,6 +4,7 @@
 #include <vector>
 #include <list>
 #include <stdio.h>
+#include <math.h>
 #include <GL/freeglut.h>
 #include <SOIL/SOIL.h>
 #include "../parser.h"

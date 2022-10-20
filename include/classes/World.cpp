@@ -7,12 +7,12 @@ void World::initialize_script_mission(){
     std::list<mission_wave> aux;
 
     //missao 1
-    parse_mission(&aux,"roteiro1");
+    parse_mission(&aux,"include/arquivos_txt/roteiro1");
     this->stack_mission.push(aux);
     aux.clear();
 
     //missao 2
-    parse_mission(&aux,"roteiro2");
+    parse_mission(&aux,"include/arquivos_txt/roteiro2");
     this->stack_mission.push(aux);
     aux.clear();
     /*
@@ -52,61 +52,99 @@ void World::start_mission(float *time){
 void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
     vec3f_t str_aux;
+    std::shared_ptr<Enemy> shr_ptr;
     //    printf("now time is : %f\n",*time);
-    for(auto i :*fase_script){
+    for(int i = 0;i<fase_script->size();i++){
 
-    if(i.time <= *time){
+    if( (*fase_script->begin() ).time <= *time){
 
         //TODO fazer a logica de jogar de spawnar inimigos e chamar o vector pro colider
         //qualquer id fora 0 é um inimigo
         // e seu id corresponde a um modelo que vai ser criado usando o metodo
         //create_models que retornara um vec de struct com seus pontos
         //para depois inicializar os modelos e bota no vec entidade
-        if(i.id_enemy>0 && i.id_enemy<4){
-            str_aux.x=i.x;
-            str_aux.y=i.y;
+        if((*fase_script->begin() ).id_enemy>0 && (*fase_script->begin() ).id_enemy<4){
+            //usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
+            str_aux.x=(*fase_script->begin() ).x;
+            str_aux.y=(*fase_script->begin() ).y;
             str_aux.z=0;
 
-            //enemy = new Enemy(str_aux,0,0,0,create_models(i.id_enemy),create_models(i.id_enemy));
-            //vec_hitbox.push_back(*enemy);
-            //TODO ver uma forma de liberar o enemy que esta no ponteiro de world
-            //free enemy;
+            //usando smartpointer para nao da merda     
+            //aloca um novo smartpointer dentro do vetor
+            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
+                                                create_models((*fase_script->begin()).id_enemy)
+                                                ,create_models((*fase_script->begin()).id_enemy));
+            vec_entitys.push_back(shr_ptr);
+            //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
+            //libera o smartpointer e libera o espaco
+
         }
 
         // id =4 ou 5 caso especial dos chefoes
-        if(i.id_enemy==4 || i.id_enemy==5){
+        if((*fase_script->begin() ).id_enemy==4 || (*fase_script->begin() ).id_enemy==5){
 
             //usa Classe do chefao para criar 
             //a create models pode ser usada ainda , pois ela so devolve o vector
             //de pontos para ser usado do modelo apenas
 
+            //usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
+            str_aux.x=(*fase_script->begin() ).x;
+            str_aux.y=(*fase_script->begin() ).y;
+            str_aux.z=0;
+
+            //usando smartpointer para nao da merda     
+            //aloca um novo smartpointer dentro do vetor
+            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
+                                                create_models((*fase_script->begin()).id_enemy)
+                                                ,create_models((*fase_script->begin()).id_enemy));
+            vec_entitys.push_back(shr_ptr);
+            //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
+            //libera o smartpointer e libera o espaco
+
+
         }
 
         //id =0 é powerup
-        if(i.id_enemy==0){
+        if((*fase_script->begin() ).id_enemy==0){
 
-            //TODO criar objeto PowerUP ou re-ultilizar o objeto Player
+            //TODO criar objeto PowerUP ou re-ultilizar o objeto Player//ou criar um tipo de 
+            //de inimigo novo com id diferente
+            
+            //usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
+            str_aux.x=(*fase_script->begin() ).x;
+            str_aux.y=(*fase_script->begin() ).y;
+            str_aux.z=0;
+
+            //usando smartpointer para nao da merda     
+            //aloca um novo smartpointer dentro do vetor
+            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
+                                                create_models((*fase_script->begin()).id_enemy)
+                                                ,create_models((*fase_script->begin()).id_enemy));
+            vec_entitys.push_back(shr_ptr);
+            //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
+            //libera o smartpointer e libera o espaco
+
 
         }
-        printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ",*time,i.time,i.id_enemy,i.x,i.y);
+        //printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ",*time,(*fase_script->begin() ).time,(*fase_script->begin() ).id_enemy,(*fase_script->begin() ).x,(*fase_script->begin() ).y);
+
+        //retira o elemento da lista.
+        fase_script->pop_front();
 
     }
 
-    }
-    //consertar erro da retirada dos elementos;
-    for(auto i:*fase_script){
-        if(i.time<=*time)
-            fase_script->pop_front();
+
     }
 
 }
 
 //metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
-void World::send_to_colider(std::vector<Entidade> vec_hitboxs){
+void World::send_to_colider(std::vector<std::unique_ptr<Entidade>> vec_hitboxs){
 
-
+//chama o colider
 
 }
+
 //metodo para criar as coordenadas das hitbox e modelos para jogar dentro do vetor Entidades
 std::vector<vec3f_t> World::create_models(int id){
 
@@ -125,14 +163,22 @@ std::vector<vec3f_t> World::create_models(int id){
 
     switch (id)
     {
+    //powerup
+    case 0:
+        /* code */
+        break;
+
+    //inimigo normal
     case 1:
         /* code */
         break;
 
+    //helicoptero que persegue
     case 2:
         /* code */
         break;
 
+    // inimigo difernte
     case 3:
         /* code */
         break;
@@ -150,10 +196,7 @@ std::vector<vec3f_t> World::create_models(int id){
     return aux;
 }
 
-//metodo menu 
-void World::show_menu(){
 
-}
 //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 void World::Credits(){

@@ -2,7 +2,8 @@
 #define __AL__
 
 #include <string.h>
-
+#include <iostream>
+#include <math.h>
 /// @brief Simboliza uma matriz NxM 
 /// @param row Quantidade de linhas
 /// @param col Quantidade de colunas

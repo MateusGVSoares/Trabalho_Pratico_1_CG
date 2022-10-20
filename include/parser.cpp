@@ -161,14 +161,20 @@ int parser_texture(std::vector<GLuint> *target,std::vector<std::pair<GLfloat,GLf
         file->getline(input_str, 50);
         //pega o nome do arquivo que ta na pasta
         file->getline(input_str, 100);
+        printf("nome = %s\n",input_str);
+        std::string input_caminho("include/texturas/");
+        input_caminho.append(input_str);
+
         //cria ID bota no vector de id passado por referencia
-        printf(" ANTES DO IDTEXTURE\n");
-        GLuint idTextura = SOIL_load_OGL_texture("textura_teste.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,SOIL_FLAG_INVERT_Y);
-        printf(" DEPOIS DO IDTEXTURE\n");
-        if(idTextura == 0){
-            printf("Erro do SOIL:  %s\n", SOIL_last_result());
+        GLuint idTextura = SOIL_load_OGL_texture(input_caminho.c_str(),SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,SOIL_FLAG_DDS_LOAD_DIRECT);
+
+        if (idTextura == 0) {
+            printf("Erro do SOIL: '%s'\n", SOIL_last_result());
         }
         target->push_back(idTextura);
+        input_caminho.clear();
+        //encerra a bagaça
+        file->getline(input_str, 100);
     }
 
 

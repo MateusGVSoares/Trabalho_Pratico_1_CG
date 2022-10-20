@@ -1,5 +1,4 @@
 #include "algebra.h"
-#include <bits/stdc++.h>
 
 void print_matrix(const char *name, Matrix_t *target)
 {

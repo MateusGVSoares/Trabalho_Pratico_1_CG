@@ -9,13 +9,14 @@ Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::ve
     this->model = model;
     this->box_model = hit_box;
     this->hit_box = hit_box;
-    //caregando tudo pelo parser
-    parser_texture(&texture_vec,&texture_cord,"TEXTURE_PLAYER.txt");
     //passando tudo para dentro do objeto
     this->texture_cord=texture_cord;
     this->texture_vec=texture_vec;
+    //caregando tudo pelo parser
+    parser_texture(&texture_vec,&texture_cord,"include/arquivos_txt/TEXTURE_PLAYER.txt");
     //da o id do player para ser tratado no colider
     this->id=id;
+
 };
 
 int Player::updateOnKeyboard(keyboard_t keys)
@@ -75,7 +76,7 @@ void Player::draw()
     glRotatef(this->angle, 0, 0, 1);
     glColor3ub(234, 55, 43);
 
-    printf("id=%d\n",this->texture_vec[0]);
+    //printf("id=%d\n",this->texture_vec[0]);
     glBindTexture(GL_TEXTURE_2D, this->texture_vec[0]);
     glBegin(GL_QUADS);
         for (int i = 0; i < this->model.size(); i++){
