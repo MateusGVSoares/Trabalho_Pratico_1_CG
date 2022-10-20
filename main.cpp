@@ -145,7 +145,6 @@ void initPlayer()
 {
     std::vector<vec3f_t> vector;
     std::vector<GLuint> texture_vec;
-    std::vector<std::pair<GLfloat,GLfloat>> texture_coord;
     if (!parse_model(&vector, "include/arquivos_txt/model"))
     {
         printf("DEU BOM NO FILE \n");
@@ -158,8 +157,7 @@ void initPlayer()
         .x = 0,
         .y = 0,
         .z = 0};
-
-    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector,texture_vec,texture_coord,2);
+    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector,texture_vec,2);
 
 }
 

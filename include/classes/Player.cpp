@@ -3,18 +3,14 @@
 
 //#define DRAW_BOX
 
-Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,std::vector<std::pair<GLfloat,GLfloat>> texture_cord,int id) : Entidade(origin, layer, angle, velocidade),Texturazer(tex_vec,texture_cord)
+Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,int id) : Entidade(origin, layer, angle, velocidade)
 {
-    // Let the player handles the model things
+    // Deixa o player alocar os modelos
     this->model = model;
     this->box_model = hit_box;
     this->hit_box = hit_box;
-    //passando tudo para dentro do objeto
-    this->texture_cord=texture_cord;
-    this->texture_vec=texture_vec;
-    //caregando tudo pelo parser
-    parser_texture(&texture_vec,&texture_cord,"include/arquivos_txt/TEXTURE_PLAYER.txt");
-    //da o id do player para ser tratado no colider
+    
+    // TODO: Coisa de colisão
     this->id=id;
 
 };
@@ -77,7 +73,7 @@ void Player::draw()
     glColor3ub(234, 55, 43);
 
     //printf("id=%d\n",this->texture_vec[0]);
-    glBindTexture(GL_TEXTURE_2D, this->texture_vec[0]);
+    glBindTexture(GL_TEXTURE_2D, this->);
     glBegin(GL_QUADS);
         for (int i = 0; i < this->model.size(); i++){
             if( i == 0)

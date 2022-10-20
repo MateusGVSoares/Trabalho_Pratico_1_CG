@@ -116,11 +116,11 @@ ERROR:
     return 0;
 }
 
-int parser_texture(std::vector<GLuint> *target,std::vector<std::pair<GLfloat,GLfloat>> *target2,const char *file_name){
+int parser_texture(std::vector<GLuint> *target,std::vector<vec3f_t> *model,const char *file_name){
 
     char *input_str = (char *)malloc(sizeof(char) * 31);
     std::ifstream *file = new std::ifstream();
-    float faux,saux;
+    vec3f_t aux = {0};
     int n_coordenadas;
     int i = 0;
     const char * nome;
@@ -152,9 +152,9 @@ int parser_texture(std::vector<GLuint> *target,std::vector<std::pair<GLfloat,GLf
         sscanf(input_str, "%d;", &n_coordenadas);
         for(int x=0;x<n_coordenadas;x++){
             file->getline(input_str, 30,';');
-            sscanf(input_str, "%f,%f", &faux,&saux);
+            sscanf(input_str, "%f,%f", &aux.x,&aux.y);
             //passa os pares de coordenadas para o vector por refencia
-            target2->push_back(std::make_pair(faux,saux));
+            model->push_back(aux);
 
         }   
         //pula uma linha pq Deus quis

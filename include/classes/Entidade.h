@@ -30,6 +30,7 @@ protected:
     std::vector<vec3f_t> model;     // Modelo gráfico
     std::vector<vec3f_t> box_model; // Modelo da hitbox
     std::vector<vec3f_t> hit_box;   // Hitbox em coordenada de mundo
+    Texturazer * texture;           // Objeto de textura
 
 
 public:

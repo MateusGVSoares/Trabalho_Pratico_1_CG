@@ -8,13 +8,15 @@
 
 
 class Texturazer{
+private:
+    std::vector<GLuint> loaded_textures;
+    std::vector<std::vector<vec3f_t>> texture_cords;
 
-    protected:
-        std::vector<GLuint> texture_vec;
-        std::vector<std::pair<GLfloat,GLfloat>> texture_cord;
-    
+    int parse_script(const char *file_name);
+   
     public:
-        Texturazer(std::vector<GLuint> tex_vec,std::vector<std::pair<GLfloat,GLfloat>> texture_cord);
+    Texturazer(const char * script_name);
+    
 
 };
 
