@@ -2,6 +2,8 @@
 #include <iostream>
 
 float razaoAspecto = 0;
+float max_x = 0, max_y = 0;
+
 keyboard_t keyboard;
 
 // Callback para pressionamento do teclado
@@ -108,7 +110,10 @@ void reshapeFct(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    glOrtho(-100 * razaoAspecto, 100 * razaoAspecto, -100, 100, -1, 1);
+    max_x = 100 * razaoAspecto;
+    max_y = 100;
+
+    glOrtho(-max_x, max_x, -max_y, max_y, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }

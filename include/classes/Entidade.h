@@ -1,13 +1,6 @@
 #ifndef __OBJECT__
 #define __OBJECT__
 
-#include <vector>
-#include <iostream>
-#include <GL/freeglut.h>
-#include <SOIL/SOIL.h>
-#include <GL/gl.h>
-#include "../algebra.h"
-#include "../callback.h"
 
 typedef struct vec3f
 {
@@ -15,6 +8,18 @@ typedef struct vec3f
     float y;
     float z;
 } vec3f_t;
+
+#include <vector>
+#include <memory>
+#include <iostream>
+#include <GL/freeglut.h>
+#include <SOIL/SOIL.h>
+#include <GL/gl.h>
+#include "../algebra.h"
+#include "../callback.h"
+#include "Texturazer.h"
+
+
 
 // Definição da classe Entidade
 class Entidade
@@ -30,7 +35,7 @@ protected:
     std::vector<vec3f_t> model;     // Modelo gráfico
     std::vector<vec3f_t> box_model; // Modelo da hitbox
     std::vector<vec3f_t> hit_box;   // Hitbox em coordenada de mundo
-    Texturazer * texture;           // Objeto de textura
+    std::shared_ptr<Texturazer> texture;           // Objeto de textura
 
 
 public:

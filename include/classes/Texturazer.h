@@ -4,22 +4,15 @@
 #include <GL/freeglut.h>
 #include <vector>
 #include <SOIL/SOIL.h>
+#include "Entidade.h"
 
-
-
-class Texturazer{
-private:
+class Texturazer
+{
+public:
     std::vector<GLuint> loaded_textures;
     std::vector<std::vector<vec3f_t>> texture_cords;
-
     int parse_script(const char *file_name);
-   
-    public:
-    Texturazer(const char * script_name);
-    
-
+    Texturazer(const char *script_name);
 };
-
-
 
 #endif

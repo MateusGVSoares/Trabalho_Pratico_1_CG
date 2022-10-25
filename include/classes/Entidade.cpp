@@ -70,7 +70,7 @@ void Entidade::updateModel()
         //     std::cout << "Freed !! \n";
         // }
 
-        if(this->hit_box[i].x <= 100 && this->hit_box[i].x >= -100 && this->hit_box[i].y < 100 && this->hit_box[i].y > -100)
+        if(this->hit_box[i].x <= max_x && this->hit_box[i].x >= -max_x && this->hit_box[i].y < max_y && this->hit_box[i].y > -max_y)
         {
             this->on_screen = 1;
         }

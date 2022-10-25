@@ -1,18 +1,18 @@
 #include "Player.h"
 
+// #define DRAW_BOX
 
-//#define DRAW_BOX
-
-Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,int id) : Entidade(origin, layer, angle, velocidade)
+Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model, std::vector<GLuint> tex_vec, int id) : Entidade(origin, layer, angle, velocidade)
 {
     // Deixa o player alocar os modelos
     this->model = model;
     this->box_model = hit_box;
     this->hit_box = hit_box;
-    
-    // TODO: Coisa de colisão
-    this->id=id;
 
+    this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
+
+    // TODO: Coisa de colisão
+    this->id = id;
 };
 
 int Player::updateOnKeyboard(keyboard_t keys)
@@ -57,11 +57,13 @@ int Player::updateOnKeyboard(keyboard_t keys)
 
 void Player::move()
 {
-    // printf("Player [Velocity : %0.2f, Vec : %0.2f %0.2f %0.2f] \n", this->velocidade, this->origin.x, this->origin.y, this->origin.z);
-    // Moves the player using the unitary direction vector
+
+    // Movimenta o player usando o vetor unitário de direção
     this->origin.x += this->direction.x * velocidade;
     this->origin.y += this->direction.y * velocidade;
     this->origin.z += this->direction.z * velocidade;
+
+    // printf("Player [Velocity : %0.2f, Vec : %0.2f %0.2f %0.2f] || x->%0.2f y->%0.2f \n", this->velocidade, this->origin.x, this->origin.y, this->origin.z,max_x,max_y);
 }
 
 void Player::draw()
@@ -72,23 +74,17 @@ void Player::draw()
     glRotatef(this->angle, 0, 0, 1);
     glColor3ub(234, 55, 43);
 
-    //printf("id=%d\n",this->texture_vec[0]);
-    glBindTexture(GL_TEXTURE_2D, this->);
-    glBegin(GL_QUADS);
-        for (int i = 0; i < this->model.size(); i++){
-            if( i == 0)
-                glTexCoord2f(0, 0);
-            if(i == 1)
-                glTexCoord2f(1, 0);
-            if(i == 2)
-                glTexCoord2f(1, 1);
-            if(i == 3)
-                glTexCoord2f(0, 1);
-            
-            glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
-        }
+    // Carrega o objeto de textura para manipular no OpenGL
+    glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
+    glBegin(GL_TRIANGLE_FAN);
+    for (int i = 0; i < this->model.size(); i++)
+    {
+        // Associa a textura ao objeto desenhado
+        glTexCoord2f(this->texture->texture_cords[0][i].x, this->texture->texture_cords[0][i].y);
+        glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
+    }
     glEnd();
-        
+
     glPopMatrix();
 
 #ifdef DRAW_BOX
@@ -103,19 +99,17 @@ void Player::draw()
     glEnd();
 
 #endif
-
 }
 
-Shot Player::playerFire()
+Shot * Player::playerFire()
 {
     vec3f_t dir = {
         .x = 0,
         .y = 1,
         .z = 0};
-    //Passa os dados para serem criado o tiro, tiro com id=2 tiro do player para ser tratado no colider
-    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model,2);
-
-    return ret_shot;
+    // Passa os dados para serem criado o tiro para ser tratado no colider 
+    // Tiro com id=2 --> tiro do player 
+    return new Shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model, 2);
 }
 
 void Player::treatColide(int col_type)

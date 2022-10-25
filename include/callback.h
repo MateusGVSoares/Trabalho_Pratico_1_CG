@@ -18,7 +18,11 @@ typedef struct Key
 } keyboard_t;
 
 extern keyboard_t keyboard;
-extern float razaoAspecto;
+
+// Aspect Ratio
+// MAX_X
+// MAX_Y
+extern float razaoAspecto, max_x, max_y;
 
 void keyboardFct(unsigned char key, int x, int y);
 void reshapeFct(int width, int height);
