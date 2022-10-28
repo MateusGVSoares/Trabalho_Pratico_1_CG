@@ -3,6 +3,8 @@
 
 #include "../parser.h"
 #include "Enemy.h"
+#include "Colider.h"
+#include "Player.h"
 #include <vector>
 #include <list>
 #include <queue>
@@ -14,13 +16,16 @@ class World{
 private:
     std::queue<std::list<mission_wave>> stack_mission; 
     //usar smartpointer
-    std::vector<std::shared_ptr<Enemy>> vec_entitys;
+    std::vector<std::shared_ptr<Entidade>> vec_entitys;
     //Powerup *power;
-    // wave 1, wave 2 , wave 3
+    // carrega o objeto colider para fazer o tratamento das colisoes
+    Colider *colisor;
+    std::shared_ptr<Player> joga;
 
 
 public:
 
+    World();
 
     //botar os roteiros das missions na queue para poder usar a start_mission
     void initialize_script_mission();
@@ -32,13 +37,23 @@ public:
     void mission_handler(std::list<mission_wave> *fase_script,float *time);
 
     //metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
-    void send_to_colider(std::vector<std::unique_ptr<Entidade>> vec_hitboxs);
+    std::vector<std::shared_ptr<Entidade>> send_to_colider(std::vector<std::shared_ptr<Entidade>> vec_hitboxs);
 
     //metodo para criar as coordenadas das hitbox e modelos para jogar dentro do vetor Entidades
     std::vector<vec3f_t> create_models(int id);
 
+    //
+    void update_entitys(float *timer_count);
+
+    //inicializa o player
+    void initPlayer();
+
     //E VAMOS DE CREDITOS FAMILIA
     void Credits();
+
+    //Desenhar todos as entidades que estão no vector de entidade que estão na tela e vivos
+    void draw_vec_entitys();
+
 
 };
 

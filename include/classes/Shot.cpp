@@ -16,7 +16,8 @@ Shot::Shot(vec3f_t origin,
     this->hit_box = hit_box;
     this->direction = direction;
     this->to_shot = std::unique_ptr<funcShot>(new funcShot);
-    this->id =id;
+    this->id =2;
+    this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
 }
 
 void Shot::move()
@@ -32,17 +33,23 @@ void Shot::move()
 
 void Shot::draw()
 {
-    glPushMatrix();
+     glPushMatrix();
 
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
-    glColor3ub(220, 20, 120);
+    glColor3ub(150, 55, 150);
+
+    // Carrega o objeto de textura para manipular no OpenGL
+    glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
     glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < this->model.size(); i++)
     {
+        // Associa a textura ao objeto desenhado
+        glTexCoord2f(this->texture->texture_cords[0][i].x, this->texture->texture_cords[0][i].y);
         glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
     }
     glEnd();
+
     glPopMatrix();
 
 #ifdef DRAW_BOX

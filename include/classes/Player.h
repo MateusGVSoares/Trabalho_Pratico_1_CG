@@ -1,3 +1,6 @@
+#ifndef __PLAYER__
+#define __PLAYER__
+
 #include "Entidade.h"
 #include "Shot.h"
 #include "Texturazer.h"
@@ -7,6 +10,7 @@
 #include <math.h>
 #include <GL/freeglut.h>
 #include <SOIL/SOIL.h>
+//lembrar de consertar depois
 #include "../parser.h"
 
 class Player : public Entidade 
@@ -22,3 +26,5 @@ public:
     void draw() override;
     void treatColide(int col_type) override;
 };
+
+#endif

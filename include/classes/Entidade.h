@@ -30,7 +30,8 @@ protected:
     bool on_screen;
     float velocidade;
     int id;
-    vec3f_t origin;
+    int alive;
+    vec3f_t origin;  
     vec3f_t direction;
     std::vector<vec3f_t> model;     // Modelo gráfico
     std::vector<vec3f_t> box_model; // Modelo da hitbox
@@ -43,6 +44,11 @@ public:
     void updateModel();
     std::vector<vec3f_t> getModel();
     bool getOnScreen();
+    int getId();
+    std::vector<vec3f_t> getHitbox();
+    vec3f_t getOrigin();
+    // é para ser overrite
+    void destroy();
     // Virtual functions
     virtual void move() = 0;
     virtual void draw() = 0;

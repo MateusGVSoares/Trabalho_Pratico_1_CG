@@ -7,12 +7,12 @@ void World::initialize_script_mission(){
     std::list<mission_wave> aux;
 
     //missao 1
-    parse_mission(&aux,"include/arquivos_txt/roteiro1");
+    parse_mission(&aux,"assets/scripts/roteiro1");
     this->stack_mission.push(aux);
     aux.clear();
 
     //missao 2
-    parse_mission(&aux,"include/arquivos_txt/roteiro2");
+    parse_mission(&aux,"assets/scripts/roteiro2");
     this->stack_mission.push(aux);
     aux.clear();
     /*
@@ -36,13 +36,14 @@ void World::start_mission(float *time){
         
     //TODO logica de spawnar inimigos e controle de tempo
     //criar metodo que faz o controle da missao e chamar aqui
+
     if(!stack_mission.empty())
         mission_handler(&stack_mission.front(),time);    
 
     if(*time>7.0 && !stack_mission.empty() ){
         *time=0;
         stack_mission.pop();
-        //printf("entrou 2 roteiro, time =%0.2f\n",*time);
+        printf("entrou 2 roteiro, time =%0.2f\n",*time);
         
     }
 
@@ -53,7 +54,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
     vec3f_t str_aux;
     std::shared_ptr<Enemy> shr_ptr;
-    //    printf("now time is : %f\n",*time);
+    //printf("now time is : %f\n",*time);
     for(int i = 0;i<fase_script->size();i++){
 
     if( (*fase_script->begin() ).time <= *time){
@@ -126,7 +127,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
 
         }
-        //printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ",*time,(*fase_script->begin() ).time,(*fase_script->begin() ).id_enemy,(*fase_script->begin() ).x,(*fase_script->begin() ).y);
+        printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ",*time,(*fase_script->begin() ).time,(*fase_script->begin() ).id_enemy,(*fase_script->begin() ).x,(*fase_script->begin() ).y);
 
         //retira o elemento da lista.
         fase_script->pop_front();
@@ -135,13 +136,23 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
 
     }
+    //chama a func de mostrat tudo na tela
 
 }
 
+World::World(){
+
+    colisor= new Colider();
+    initPlayer();
+}
+
 //metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
-void World::send_to_colider(std::vector<std::unique_ptr<Entidade>> vec_hitboxs){
+std::vector<std::shared_ptr<Entidade>> World::send_to_colider(std::vector<std::shared_ptr<Entidade>> vec_hitbox){
 
 //chama o colider
+
+
+    return colisor->check_colison(vec_hitbox);  
 
 }
 
@@ -192,10 +203,76 @@ std::vector<vec3f_t> World::create_models(int id){
         break;
     }
 
-    aux.push_back(batata);
+    //aux.push_back(batata);
+
+    //usando o modelo do player para debug no momento
+    !parse_model(&aux, "assets/scripts/player.mscp");
     return aux;
 }
 
+void World::draw_vec_entitys(){
+
+    std::vector<std::shared_ptr<Entidade>> to_colider;
+    //printf("tamanho do vec entitys = %d \n",vec_entitys.size());
+    //movo,atualizo e ordeno pro colider
+    for(int x=0;x<vec_entitys.size();x++){
+
+        if(vec_entitys.at(x)->getOnScreen()){
+            to_colider.push_back(vec_entitys.at(x));
+        }
+        else{
+            vec_entitys.erase(vec_entitys.begin()+x);
+            x--;
+        }
+    }
+    //printf("tamanho sendotocolider = %d \n",to_colider.size());
+    //depois de ordenado, mandar pro colider
+    vec_entitys = send_to_colider(to_colider);
+    to_colider.clear();
+    //printf("tamanho do vec entitys depois = %d \n",vec_entitys.size());
+
+    for(int x=0;x<vec_entitys.size();x++)
+        vec_entitys.at(x)->draw();
+
+}
+
+void World::initPlayer()
+{
+    std::vector<vec3f_t> vector;
+    std::vector<GLuint> texture_vec;
+    if (!parse_model(&vector, "assets/scripts/player.mscp"))
+    {
+        printf("DEU BOM NO FILE \n");
+    }
+
+
+    vec3f_t origin = {
+        .x = 0,
+        .y = 0,
+        .z = 0};
+    joga =  std::make_shared<Player>(origin, 0, 0.0f, 1.0f, vector, vector, texture_vec, 2);
+    vec_entitys.push_back(joga);
+}
+
+void World::update_entitys(float *timer_count){
+
+    int shot =0;
+     // Updates the movements
+    if(joga != nullptr) 
+        shot = joga->updateOnKeyboard(keyboard);
+
+    if (shot && *timer_count > 0.3)
+    {
+        *timer_count = 0;
+        vec_entitys.push_back(std::shared_ptr<Shot>(joga->playerFire()));
+    }
+
+    for (int i = 0; i < vec_entitys.size(); i++)
+    {
+        vec_entitys.at(i)->move();
+        vec_entitys.at(i)->updateModel();
+    }
+}
 
 //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 

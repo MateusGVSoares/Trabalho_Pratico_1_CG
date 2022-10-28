@@ -106,11 +106,12 @@ int parse_mission(std::list<mission_wave> *target, const char *file_name)
         file->getline(input_str, 100);
     }
 
-    // DEBUG
+    #if DEBUG
     for (auto i : *target)
     {
         printf("wave[] id=%d : x=%f, y=%f, time=%f \n", i.id_enemy, i.x, i.y, i.time);
     }
+    #endif
 
     // Label para limpar a memória
 ERROR:

@@ -88,9 +88,9 @@ void Menu::inicializa()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //guarda os ids das texturas
-    idTextures[0] = load_texture("include/texturas/menuoption1.jpg");
-    idTextures[1] = load_texture("include/texturas/menuoption2.jpg");
-    idTextures[2] = load_texture("include/texturas/menuoption3.jpg");
+    idTextures[0] = load_texture("assets/texture/menuoption1.jpg");
+    idTextures[1] = load_texture("assets/texture/menuoption2.jpg");
+    idTextures[2] = load_texture("assets/texture/menuoption3.jpg");
 
     idCurrentTexture=idTextures[0];
 }

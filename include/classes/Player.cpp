@@ -12,7 +12,7 @@ Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::ve
     this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
 
     // TODO: Coisa de colisão
-    this->id = id;
+    this->id = 1;
 };
 
 int Player::updateOnKeyboard(keyboard_t keys)
@@ -57,7 +57,7 @@ int Player::updateOnKeyboard(keyboard_t keys)
 
 void Player::move()
 {
-
+    updateOnKeyboard(keyboard);
     // Movimenta o player usando o vetor unitário de direção
     this->origin.x += this->direction.x * velocidade;
     this->origin.y += this->direction.y * velocidade;
@@ -107,9 +107,14 @@ Shot * Player::playerFire()
         .x = 0,
         .y = 1,
         .z = 0};
+
+    vec3f_t shot_origin = this->origin;
+    shot_origin.y+=12;
+
+
     // Passa os dados para serem criado o tiro para ser tratado no colider 
     // Tiro com id=2 --> tiro do player 
-    return new Shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model, 2);
+    return new Shot(shot_origin, 1, 0, 0.5f, dir, this->model, this->box_model, 2);
 }
 
 void Player::treatColide(int col_type)

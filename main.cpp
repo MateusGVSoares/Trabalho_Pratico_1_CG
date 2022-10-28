@@ -11,19 +11,27 @@
 #include "include/classes/Entidade.h"
 #include "include/classes/Player.h"
 #include "include/classes/Shot.h"
-
-// TODO: Classes inacabadas
+#include "include/classes/Texturazer.h"
 #include "include/classes/World.h"
 #include "include/classes/Enemy.h"
-// #include "include/classes/Colider.h"
-#include "include/classes/Texturazer.h"
+#include "include/classes/Colider.h"
 #include "include/classes/Menu.h"
 
+
 // VAMOS MEU CAMISA 09 >_< (Updated by Mateus on 16/08, 11:00:01)
-Player *joga;
 std::vector<std::shared_ptr<Shot>> entities;
 World *mundo;
 Menu *menu;
+//TODO 
+//implementar sistema de vida do player
+//implementar os tipos de tiro do player
+//implementar os powerups
+//botar a IA do movimento dos inimigos
+//botar textura nas paradas
+//terminar roteiro dos inimigos
+//criar boss
+//implementar sistema de tiro do inimigo
+//so quando completar isso partir para os pontos extras
 
 // variaveis globais
 float timer_count = 0;
@@ -38,36 +46,23 @@ void drawUpdate()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // mostra o menu
-    //  if(menu->flagpermission == 0 ){
-    //      menu->draw();
-    //  }
-    //  //mostra os creditos
-    //  if(menu->flagpermission == 2){
+      if(menu->flagpermission == 0 ){
+          menu->draw();
+      }
+      //mostra os creditos
+      if(menu->flagpermission == 2){
 
-    // }
-    // //inicia o jogo
-    // if(menu->flagpermission == 1){
-    // if (joga->getOnScreen())
-    // {
+     }
+     //inicia o jogo
+     if(menu->flagpermission == 1){
+     //if (joga->getOnScreen())
+     //{
         glEnable(GL_TEXTURE_2D);
-        joga->draw();
+        //joga->draw();
+        mundo->draw_vec_entitys();
         glDisable(GL_TEXTURE_2D);
-    // }
-    // else
-    // {
-    //     printf("Ta dentro AI \n");
-    // }
-    for (int i = 0; i < entities.size(); i++)
-    {
-        if (entities[i]->getOnScreen())
-            entities[i]->draw();
-        else
-        {
-            entities.erase(entities.begin() + i);
-        }
-    }
 
-    // }
+     }
 
     glutSwapBuffers();
 }
@@ -77,48 +72,29 @@ void onTimeUpdate(int time)
     // tempo globais para auxiliar a classe World
     timer_count += (float)time / 1000;
     world_time += (float)time / 1000;
-    // if ((menu->flagpermission == 0 || menu->flagpermission == 2) && world_time >= 125)
-    // {
-    //     menu->comum_key_pressed(keyboard);
-    //     menu->key_pressed(keyboard);
-    //     world_time = 0;
-    // }
+     if ((menu->flagpermission == 0 || menu->flagpermission == 2) && world_time >= 0.125)
+     {
+         menu->comum_key_pressed(keyboard);
+         menu->key_pressed(keyboard);
+         world_time = 0;
+     }
 
-    // if (menu->flagpermission == 1)
-    // {
-    // mundo->start_mission(&world_time);
+     if (menu->flagpermission == 1)
+     {
+        //printf("time = %0.2f \n",world_time);
+        mundo->start_mission(&world_time);
+            mundo->update_entitys(&timer_count);
+     }
 
-    // Updates the movements
-    int shot = joga->updateOnKeyboard(keyboard);
-    joga->move();
-
-    if (shot && timer_count > 0.1)
-    {
-        timer_count = 0;
-        entities.push_back(std::shared_ptr<Shot>(joga->playerFire()));
-    }
-
-    for (int i = 0; i < entities.size(); i++)
-    {
-        entities[i]->move();
-        entities[i]->updateModel();
-    }
-
-    // if (menu->flagpermission == 2)
-    // {
-    //     // roda os creditos
-    //     printf(" dor apens dor\n");
-    // }
-
-    // Updates the collisions boxes
-    joga->updateModel();
-    // }
-    // Treats the collisions
+     if (menu->flagpermission == 2)
+     {
+         // roda os creditos
+         printf(" dor apens dor\n");
+     }
 
     // Draws everything <3
     glutPostRedisplay();
 
-    world_time += time;
     // Restarts the timerFunc
     glutTimerFunc(time, onTimeUpdate, time);
 }
@@ -148,36 +124,18 @@ void configGlut()
     glutIgnoreKeyRepeat(1);
 }
 
-void initPlayer()
-{
-    std::vector<vec3f_t> vector;
-    std::vector<GLuint> texture_vec;
-    if (!parse_model(&vector, "assets/scripts/player.mscp"))
-    {
-        printf("DEU BOM NO FILE \n");
-    }
-    /*if(!parse_texture(%texture_vec,"texture.txt"))
-        printf(" DEU BOM NO PARSER DA TEXTURA\n");
-    */
-
-    vec3f_t origin = {
-        .x = 0,
-        .y = 0,
-        .z = 0};
-    joga = new Player(origin, 0, 0.0f, 1.0f, vector, vector, texture_vec, 2);
-}
-
 // YES, this cause a memory leak!
-// void startMenu()
-// {
-//     menu = new Menu();
-//     menu->inicializa();
-// }
+ void startMenu()
+ {
+     menu = new Menu();
+     menu->inicializa();
+ }
 
-// void startMundo()
-// {
-//     mundo = new World();
-// }
+ void startMundo()
+ {
+     mundo = new World();
+     mundo->initialize_script_mission();
+ }
 
 int main(int argc, char **argv)
 {
@@ -188,11 +146,9 @@ int main(int argc, char **argv)
 
     glewInit();
 
-    // startMenu();
+    startMenu();
 
-    // startMundo();
-
-    initPlayer();
+    startMundo();
 
     glutMainLoop();
 
