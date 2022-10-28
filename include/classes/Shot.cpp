@@ -17,7 +17,7 @@ Shot::Shot(vec3f_t origin,
     this->direction = direction;
     this->to_shot = std::unique_ptr<funcShot>(new funcShot);
     this->id =2;
-    this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
+    this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");//lembra de criar
 }
 
 void Shot::move()

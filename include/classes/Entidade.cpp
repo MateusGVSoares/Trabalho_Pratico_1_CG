@@ -17,6 +17,12 @@ bool Entidade::getOnScreen()
 void Entidade::destroy(){
     this->alive=0;
 }
+
+void Entidade::setTexture(std::shared_ptr<Texturazer> target){
+
+    this->texture = target;
+}
+
 int Entidade::getId()
 {
 

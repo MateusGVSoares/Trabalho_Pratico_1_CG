@@ -15,8 +15,6 @@ Enemy::Enemy(vec3f_t origin, int layer, float angle, float velocidade, std::vect
     this->alive=1;
     // id vindo do script;
     this->id = 4;
-    // carregar a textura pelo script
-    this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
     // Inicializa a velocidade
     this->velocidade = velocidade;
 };

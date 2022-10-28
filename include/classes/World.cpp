@@ -75,6 +75,8 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
             shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
                                                 create_models((*fase_script->begin()).id_enemy)
                                                 ,create_models((*fase_script->begin()).id_enemy));
+            send_texture((*fase_script->begin()).id_enemy,shr_ptr);
+
             vec_entitys.push_back(shr_ptr);
             //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
             //libera o smartpointer e libera o espaco
@@ -98,6 +100,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
             shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
                                                 create_models((*fase_script->begin()).id_enemy)
                                                 ,create_models((*fase_script->begin()).id_enemy));
+            send_texture((*fase_script->begin()).id_enemy,shr_ptr);
             vec_entitys.push_back(shr_ptr);
             //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
             //libera o smartpointer e libera o espaco
@@ -118,9 +121,11 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
             //usando smartpointer para nao da merda     
             //aloca um novo smartpointer dentro do vetor
+            //trocar o pointer para powerup depois
             shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
                                                 create_models((*fase_script->begin()).id_enemy)
                                                 ,create_models((*fase_script->begin()).id_enemy));
+            send_texture((*fase_script->begin()).id_enemy,shr_ptr);
             vec_entitys.push_back(shr_ptr);
             //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
             //libera o smartpointer e libera o espaco
@@ -181,32 +186,29 @@ std::vector<vec3f_t> World::create_models(int id){
 
     //inimigo normal
     case 1:
-        /* code */
+        !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
         break;
 
     //helicoptero que persegue
     case 2:
-        /* code */
+         !parse_model(&aux, "assets/scripts/inimigo_tipo2.mscp");
         break;
 
     // inimigo difernte
     case 3:
-        /* code */
+         !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
         break;
 
     //id = 4 é o chefao
     case 4:
-        /* code */
+         !parse_model(&aux, "assets/scripts/chefao1.mscp");
         break;
     
-    default:
+    case 5:
+        !parse_model(&aux, "assets/scripts/chefao1.mscp");
         break;
     }
 
-    //aux.push_back(batata);
-
-    //usando o modelo do player para debug no momento
-    !parse_model(&aux, "assets/scripts/player.mscp");
     return aux;
 }
 
@@ -272,6 +274,21 @@ void World::update_entitys(float *timer_count){
         vec_entitys.at(i)->move();
         vec_entitys.at(i)->updateModel();
     }
+}
+
+void World::send_texture(int id, std::shared_ptr<Enemy> shr_ptr){
+
+    // id =1, inimigo normal
+    // id =3 ...
+    switch (id)
+    {
+    case 1:
+        shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo1.tscp"));
+        break;
+    
+    }
+
+
 }
 
 //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

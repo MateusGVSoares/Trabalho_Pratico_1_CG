@@ -46,6 +46,7 @@ public:
     bool getOnScreen();
     int getId();
     std::vector<vec3f_t> getHitbox();
+    void setTexture(std::shared_ptr<Texturazer> target);
     vec3f_t getOrigin();
     // é para ser overrite
     void destroy();

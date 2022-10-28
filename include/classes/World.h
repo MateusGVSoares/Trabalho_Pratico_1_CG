@@ -42,6 +42,8 @@ public:
     //metodo para criar as coordenadas das hitbox e modelos para jogar dentro do vetor Entidades
     std::vector<vec3f_t> create_models(int id);
 
+    void send_texture(int id, std::shared_ptr<Enemy> shr_ptr);
+
     //
     void update_entitys(float *timer_count);
 
