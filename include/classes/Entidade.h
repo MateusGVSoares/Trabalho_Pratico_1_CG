@@ -1,11 +1,6 @@
 #ifndef __OBJECT__
 #define __OBJECT__
 
-#include <vector>
-#include <iostream>
-#include <GL/gl.h>
-#include "../algebra.h"
-#include "../callback.h"
 
 typedef struct vec3f
 {
@@ -13,6 +8,18 @@ typedef struct vec3f
     float y;
     float z;
 } vec3f_t;
+
+#include <vector>
+#include <memory>
+#include <iostream>
+#include <GL/freeglut.h>
+#include <SOIL/SOIL.h>
+#include <GL/gl.h>
+#include "../algebra.h"
+#include "../callback.h"
+#include "Texturazer.h"
+
+
 
 // Definição da classe Entidade
 class Entidade
@@ -22,18 +29,26 @@ protected:
     int layer;
     bool on_screen;
     float velocidade;
-    vec3f_t origin;
+    int id;
+    int alive;
+    vec3f_t origin;  
     vec3f_t direction;
     std::vector<vec3f_t> model;     // Modelo gráfico
     std::vector<vec3f_t> box_model; // Modelo da hitbox
     std::vector<vec3f_t> hit_box;   // Hitbox em coordenada de mundo
-    // TODO : Texture
+    std::shared_ptr<Texturazer> texture;           // Objeto de textura
+
 
 public:
     Entidade(vec3f_t origin, int layer, float angle,float velocidade);
     void updateModel();
     std::vector<vec3f_t> getModel();
     bool getOnScreen();
+    int getId();
+    std::vector<vec3f_t> getHitbox();
+    vec3f_t getOrigin();
+    // é para ser overrite
+    void destroy();
     // Virtual functions
     virtual void move() = 0;
     virtual void draw() = 0;

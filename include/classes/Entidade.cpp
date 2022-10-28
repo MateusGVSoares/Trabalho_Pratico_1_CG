@@ -6,11 +6,24 @@ Entidade::Entidade(vec3f_t origin, int layer, float angle, float velocidade)
     this->layer = layer;
     this->angle = angle;
     this->velocidade = velocidade;
+    this->id =-1;
+    this->alive=1;
 }
 
 bool Entidade::getOnScreen()
 {
     return this->on_screen;
+}
+void Entidade::destroy(){
+    this->alive=0;
+}
+int Entidade::getId()
+{
+
+    return this->id;
+}
+vec3f_t Entidade::getOrigin(){
+    return this->origin;
 }
 
 void Entidade::updateModel()
@@ -70,7 +83,7 @@ void Entidade::updateModel()
         //     std::cout << "Freed !! \n";
         // }
 
-        if(this->hit_box[i].x <= 100 && this->hit_box[i].x >= -100 && this->hit_box[i].y < 100 && this->hit_box[i].y > -100)
+        if(this->hit_box[i].x <= max_x && this->hit_box[i].x >= -max_x && this->hit_box[i].y < max_y && this->hit_box[i].y > -max_y)
         {
             this->on_screen = 1;
         }
@@ -87,4 +100,9 @@ void Entidade::updateModel()
 std::vector<vec3f_t> Entidade::getModel()
 {
     return this->model;
+}
+
+std::vector<vec3f_t> Entidade::getHitbox()
+{
+    return this->hit_box;
 }

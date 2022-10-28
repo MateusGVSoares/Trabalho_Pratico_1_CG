@@ -2,6 +2,8 @@
 #include <iostream>
 
 float razaoAspecto = 0;
+float max_x = 0, max_y = 0;
+
 keyboard_t keyboard;
 
 // Callback para pressionamento do teclado
@@ -13,26 +15,37 @@ void keyboardFct(unsigned char key, int x, int y)
 
     switch (key)
     {
-    case 'w':
 
+    case 13:
+        if (keyboard.enter)
+            keyboard.enter = 0;
+        else
+            keyboard.enter = 1;
+        break;
+
+    case 'w':
+    case 'W':
         if (keyboard.w)
             keyboard.w = 0;
         else
             keyboard.w = 1;
         break;
     case 'a':
+    case 'A':
         if (keyboard.a == 1)
             keyboard.a = 0;
         else
             keyboard.a = 1;
         break;
     case 's':
+    case 'S':
         if (keyboard.s)
             keyboard.s = 0;
         else
             keyboard.s = 1;
         break;
     case 'd':
+    case 'D':
         if (keyboard.d)
             keyboard.d = 0;
         else
@@ -97,7 +110,10 @@ void reshapeFct(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    glOrtho(-100 * razaoAspecto, 100 * razaoAspecto, -100, 100, -1, 1);
+    max_x = 100 * razaoAspecto;
+    max_y = 100;
+
+    glOrtho(-max_x, max_x, -max_y, max_y, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }

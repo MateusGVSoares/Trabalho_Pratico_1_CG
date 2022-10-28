@@ -1,6 +1,6 @@
 CC = g++
 OUTPUT=main
-FLAGS=-lGL -lGLU -lglut -lm -lSOIL
+FLAGS=-lGL -lGLU -lglut -lm -lSOIL -lGLEW
 #all:
 #		$(CC) *.c */*.c -lGL -lGLU -lglut -lm -o main
 
