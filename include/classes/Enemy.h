@@ -30,14 +30,19 @@ struct iaMovement
         origin->y += direction.y;
         origin->z += direction.z;
     }
+    void typeBoss1(vec3f_t* origin, vec3f_t direction){
+
+    }
 };
 
 public:
     using Entidade::Entidade;
     Enemy(vec3f_t origin, int layer, float angle, float velocidade,std::vector<vec3f_t> hit_box,std::vector<vec3f_t> model);
     Shot enemyFire();
+    void setId(int a);
     void move() override;
     void draw() override;
+    int destroy() override;
     void treatColide(int col_type) override;
 };
 

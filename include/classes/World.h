@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Colider.h"
 #include "Player.h"
+#include "Background.h"
 #include <vector>
 #include <list>
 #include <queue>
@@ -21,6 +22,7 @@ private:
     // carrega o objeto colider para fazer o tratamento das colisoes
     Colider *colisor;
     std::shared_ptr<Player> joga;
+    std::shared_ptr<Background> background;
 
 
 public:
@@ -42,13 +44,17 @@ public:
     //metodo para criar as coordenadas das hitbox e modelos para jogar dentro do vetor Entidades
     std::vector<vec3f_t> create_models(int id);
 
+    //carrega o objeto textura dos inimigos criados
     void send_texture(int id, std::shared_ptr<Enemy> shr_ptr);
 
-    //
+    //atualiza todas as entidades presentes na tela
     void update_entitys(float *timer_count);
 
     //inicializa o player
     void initPlayer();
+
+    //inicializa o background
+    void initbackGround();
 
     //E VAMOS DE CREDITOS FAMILIA
     void Credits();

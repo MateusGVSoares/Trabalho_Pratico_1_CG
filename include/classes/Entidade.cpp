@@ -8,14 +8,14 @@ Entidade::Entidade(vec3f_t origin, int layer, float angle, float velocidade)
     this->velocidade = velocidade;
     this->id =-1;
     this->alive=1;
+    this->timer_control_texture = 0;
+    this->const_anim_texture = 1.0 / 5.0;
+    this->timer = 0;
 }
 
 bool Entidade::getOnScreen()
 {
     return this->on_screen;
-}
-void Entidade::destroy(){
-    this->alive=0;
 }
 
 void Entidade::setTexture(std::shared_ptr<Texturazer> target){

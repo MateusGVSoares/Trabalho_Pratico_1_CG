@@ -63,16 +63,16 @@ void Menu::draw(){
         glBegin(GL_TRIANGLE_FAN);
             // Associamos um canto da textura para cada vértice
             glTexCoord2f(0, 0);
-            glVertex3f(-100, -100,  0);
+            glVertex3f(-256*razaoAspecto, -224,  0);
 
             glTexCoord2f(1, 0);
-            glVertex3f( 100, -100,  0);
+            glVertex3f( 256*razaoAspecto, -224,  0);
 
             glTexCoord2f(1, 1);
-            glVertex3f( 100,  100,  0);
+            glVertex3f( 256*razaoAspecto,  224,  0);
 
             glTexCoord2f(0, 1);
-            glVertex3f(-100,  100,  0);
+            glVertex3f(-256*razaoAspecto,  224,  0);
         glEnd();
         glDisable(GL_TEXTURE_2D);
     glPopMatrix();

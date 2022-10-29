@@ -23,13 +23,11 @@ std::vector<std::shared_ptr<Shot>> entities;
 World *mundo;
 Menu *menu;
 //TODO 
-//implementar sistema de vida do player
 //implementar os tipos de tiro do player
 //implementar os powerups
 //botar a IA do movimento dos inimigos
-//botar textura nas paradas
 //terminar roteiro dos inimigos
-//criar boss
+//criar boss ta quase.
 //implementar sistema de tiro do inimigo
 //so quando completar isso partir para os pontos extras
 

@@ -22,6 +22,7 @@ public:
     Shot(vec3f_t origin, int layer, float angle, float velocidade, vec3f_t direction, std::vector<vec3f_t> model, std::vector<vec3f_t> hit_box,int id);
     void draw() override;
     void move() override;
+    int destroy() override;
     void treatColide(int col_type) override;
 };
 

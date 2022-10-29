@@ -32,9 +32,13 @@ Shot Enemy::enemyFire(){
 
 }
 
+void Enemy::setId(int a){
+    this->id =a;
+}
+
 void Enemy::move(){
     
-    origin.y -=0.5;
+    origin.y -=velocidade;
 
 };
 
@@ -44,6 +48,7 @@ glPushMatrix();
 
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
+
     glColor3ub(140, 65, 43);
 
     // Carrega o objeto de textura para manipular no OpenGL
@@ -61,7 +66,12 @@ glPushMatrix();
 
 };
 
+
 void Enemy::treatColide(int col_type){
 
 
 };
+int Enemy::destroy(){
+
+    return 1;
+}

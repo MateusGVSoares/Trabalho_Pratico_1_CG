@@ -90,11 +90,17 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                 break;
 
             case 17:
-            // colisao do player com powerup pois a soma sempre será igual a 8
+            // colisao do player com powerup pois a soma sempre será igual a 17
                 if(try_colison(vec_entitys.at(x)->getOrigin(),vec_entitys.at(x)->getHitbox(),vec_entitys.at(z)->getHitbox() ) ){
                     printf("colisao 17 de %d com %d \n",x,z);
                         detect_col.insert(x);
                         detect_col.insert(z);
+                        /*
+                            if(vec_entitys[x]->getId() ==16)
+                                //do powerup
+                            else
+                                //do powerup
+                        */
                     }
                 break;
 
@@ -145,10 +151,14 @@ std::vector<std::shared_ptr<Entidade>> Colider::handle_colison(std::vector<std::
     for(int x=0;x<vec_entitys.size();x++){
         //chamar o metodo padrao de destruicao das coisas que vai ser implementado pela Entidade
         //
-        vec_entitys.at(x)->destroy();
+        if(vec_entitys.at(x)->destroy()){
+            vec_entitys.erase(vec_entitys.begin()+x);
+            x--;
+        }
+            
     }
 
-    vec_entitys.clear();
+
 
     return vec_entitys;
 

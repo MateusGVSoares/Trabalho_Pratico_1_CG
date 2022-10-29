@@ -60,8 +60,8 @@ int parse_model(std::vector<vec3f_t> *target, const char *file_name)
     delete file;
     return 0;
 }
-//             3     logo terao 3 triplas 1:id tipo de inimigo,2:coordenada x,3:cordenada y;
 // tipo: tempo;quantia_de_objetos;sequencia de triplas;
+//             3     logo terao 3 triplas 1:id tipo de inimigo,2:coordenada x,3:cordenada y;
 
 // Parser para modelo de arquivo
 int parse_mission(std::list<mission_wave> *target, const char *file_name)

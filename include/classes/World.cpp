@@ -43,6 +43,9 @@ void World::start_mission(float *time){
     if(*time>7.0 && !stack_mission.empty() ){
         *time=0;
         stack_mission.pop();
+        //troca a textura do background
+        //background.reset();
+        //background->setTexture(std::make_shared<Texturazer>("assets/scripts/background2.tscp"));
         printf("entrou 2 roteiro, time =%0.2f\n",*time);
         
     }
@@ -72,7 +75,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
             //usando smartpointer para nao da merda     
             //aloca um novo smartpointer dentro do vetor
-            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
+            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0.5,
                                                 create_models((*fase_script->begin()).id_enemy)
                                                 ,create_models((*fase_script->begin()).id_enemy));
             send_texture((*fase_script->begin()).id_enemy,shr_ptr);
@@ -97,12 +100,11 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
             //usando smartpointer para nao da merda     
             //aloca um novo smartpointer dentro do vetor
-            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
+            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0.5,
                                                 create_models((*fase_script->begin()).id_enemy)
                                                 ,create_models((*fase_script->begin()).id_enemy));
             send_texture((*fase_script->begin()).id_enemy,shr_ptr);
             vec_entitys.push_back(shr_ptr);
-            //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
             //libera o smartpointer e libera o espaco
 
 
@@ -122,12 +124,11 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
             //usando smartpointer para nao da merda     
             //aloca um novo smartpointer dentro do vetor
             //trocar o pointer para powerup depois
-            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0,
+            shr_ptr = std::make_shared<Enemy>(str_aux,0,0,0.5,
                                                 create_models((*fase_script->begin()).id_enemy)
                                                 ,create_models((*fase_script->begin()).id_enemy));
             send_texture((*fase_script->begin()).id_enemy,shr_ptr);
             vec_entitys.push_back(shr_ptr);
-            //printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
             //libera o smartpointer e libera o espaco
 
 
@@ -141,13 +142,13 @@ void World::mission_handler(std::list<mission_wave> *fase_script,float *time){
 
 
     }
-    //chama a func de mostrat tudo na tela
 
 }
 
 World::World(){
 
     colisor= new Colider();
+    initbackGround();
     initPlayer();
 }
 
@@ -178,36 +179,35 @@ std::vector<vec3f_t> World::create_models(int id){
     // e devolver para o world no mission_handler criar o inimigo e botar no vetor de identidades;
 
     switch (id)
-    {
-    //powerup
-    case 0:
-        /* code */
-        break;
+        {
+        //powerup
+        case 0:
+            break;
+        //inimigo normal
+        case 1:
+            !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
+            break;
 
-    //inimigo normal
-    case 1:
-        !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
-        break;
+        //helicoptero que persegue
+        case 2:
+            !parse_model(&aux, "assets/scripts/inimigo_tipo2.mscp");
+            break;
 
-    //helicoptero que persegue
-    case 2:
-         !parse_model(&aux, "assets/scripts/inimigo_tipo2.mscp");
-        break;
+        // inimigo difernte
+        case 3:
+            !parse_model(&aux, "assets/scripts/inimigo_tipo3.mscp");
+            break;
 
-    // inimigo difernte
-    case 3:
-         !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
-        break;
-
-    //id = 4 é o chefao
-    case 4:
-         !parse_model(&aux, "assets/scripts/chefao1.mscp");
-        break;
-    
-    case 5:
-        !parse_model(&aux, "assets/scripts/chefao1.mscp");
-        break;
-    }
+        //id = 4 é o chefao
+        case 4:
+            !parse_model(&aux, "assets/scripts/chefao1.mscp");
+            break;
+        
+        // Boss stage 2
+        case 5:
+            !parse_model(&aux, "assets/scripts/chefao2.mscp");
+            break;
+        }
 
     return aux;
 }
@@ -274,6 +274,8 @@ void World::update_entitys(float *timer_count){
         vec_entitys.at(i)->move();
         vec_entitys.at(i)->updateModel();
     }
+    //re ultilizando funcao ele nao vai se auto destruir seu corno desgrçado
+    background->destroy();
 }
 
 void World::send_texture(int id, std::shared_ptr<Enemy> shr_ptr){
@@ -282,12 +284,48 @@ void World::send_texture(int id, std::shared_ptr<Enemy> shr_ptr){
     // id =3 ...
     switch (id)
     {
-    case 1:
-        shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo1.tscp"));
-        break;
-    
-    }
+        case 0:
+            break;
+        case 1:
+            shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo1.tscp"));
+            break;    
+        case 2:
+            shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo2.tscp"));
+            break;    
+        case 3:
+            shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo3.tscp"));
+            break;    
+        case 4:
+            shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/chefao1.tscp"));
+            break;    
+        case 5:
+            shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/chefao2.tscp"));
+            break;    
+    } 
 
+
+
+}
+
+void World::initbackGround(){
+
+    std::vector<vec3f_t> str_aux;
+    vec3f_t p1 ={-256,224,-1};
+    vec3f_t p2 ={256,224,-1};
+    vec3f_t p3 ={256,-224,-1};
+    vec3f_t p4 ={-256,-224,-1};
+    vec3f_t p5 ={0,0,0};
+    str_aux.push_back(p1);
+    str_aux.push_back(p2);
+    str_aux.push_back(p3);
+    str_aux.push_back(p4);
+
+    background = std::make_shared<Background>(p5,0,0,0.1,
+                                                str_aux
+                                                ,str_aux);
+ 
+    background->setTexture(std::make_shared<Texturazer>("assets/scripts/background1.tscp"));
+    vec_entitys.push_back(background);
 
 }
 

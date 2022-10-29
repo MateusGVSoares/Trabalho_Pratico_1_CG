@@ -31,6 +31,10 @@ protected:
     float velocidade;
     int id;
     int alive;
+    float timer;
+    float timer_control_texture;
+    float const_anim_texture;
+    int cont_stage_tex;
     vec3f_t origin;  
     vec3f_t direction;
     std::vector<vec3f_t> model;     // Modelo gráfico
@@ -42,15 +46,16 @@ protected:
 public:
     Entidade(vec3f_t origin, int layer, float angle,float velocidade);
     void updateModel();
+    //getters
     std::vector<vec3f_t> getModel();
     bool getOnScreen();
     int getId();
     std::vector<vec3f_t> getHitbox();
+    //setters
     void setTexture(std::shared_ptr<Texturazer> target);
     vec3f_t getOrigin();
-    // é para ser overrite
-    void destroy();
     // Virtual functions
+    virtual int destroy()=0;
     virtual void move() = 0;
     virtual void draw() = 0;
     virtual void treatColide(int col_type) = 0; // Trata colisão depend

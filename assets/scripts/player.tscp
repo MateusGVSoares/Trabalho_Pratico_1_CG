@@ -1,6 +1,12 @@
 TEXTURE_SCRIPT
-2
+5
 4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
-textura_teste.png
+playermain.png
 4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
-pessoa.png
+tiroplayer.png
+4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
+EnergyBall.png
+4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
+playerrigth.png
+4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
+playerleft.png
