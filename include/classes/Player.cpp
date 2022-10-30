@@ -15,7 +15,8 @@ Player::Player(vec3f_t origin,
     this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
     this->hp = 2;
     this->vidas = 2;
-
+    this->cont_stage_tex=0;
+    this->velocidade =3;
     // ID para colisao(não é o id de carregamento das coisas do script)
     this->id = 1;
 };
@@ -85,12 +86,12 @@ void Player::draw()
     // A é a textura 1
     if (keyboard.a == 1 && keyboard.d == 0 || keyboard.left == 1 && keyboard.right == 0)
     {
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[3]);
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[2]);
     }
     // D é a textura 2
     else if (keyboard.d == 1 && keyboard.a == 0 || keyboard.right == 1 && keyboard.left == 0)
     {
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[4]);
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
     }
     else
     {
@@ -134,7 +135,7 @@ Shot *Player::playerFire()
 
     // Passa os dados para serem criado o tiro para ser tratado no colider
     // Tiro com id=2 --> tiro do player
-    return new Shot(shot_origin, 90.0f, 2.0f, dir,this->id,"assets/scripts/player_shot.tscp");
+    return new Shot(shot_origin, 90.0f, 2.0f, dir,this->id,"assets/scripts/player_shot.tscp",this->cont_stage_tex);
 }
 
 int Player::destroy()

@@ -3,6 +3,7 @@
 
 #include "Entidade.h"
 #include "Shot.h"
+#include "../parser.h"
 #include <vector>
 #include <GL/freeglut.h>
 

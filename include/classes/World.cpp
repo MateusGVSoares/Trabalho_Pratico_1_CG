@@ -55,6 +55,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
     vec3f_t str_aux;
     std::shared_ptr<Enemy> shr_ptr;
+    std::shared_ptr<Boss> shr_boss;
     // printf("now time is : %f\n",*time);
     for (int i = 0; i < fase_script->size(); i++)
     {
@@ -99,12 +100,37 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
                 // usando smartpointer para nao da merda
                 // aloca um novo smartpointer dentro do vetor
+                shr_boss = std::make_shared<Boss>(str_aux,0,0.5,
+                                                    create_models((*fase_script->begin()).id_enemy)
+                                                    ,create_models((*fase_script->begin()).id_enemy));
+                send_texture((*fase_script->begin()).id_enemy,shr_boss);
+                vec_entitys.push_back(shr_boss);
+                // libera o smartpointer e libera o espaco
+            }
+
+            //id =0 é powerup
+            if((*fase_script->begin() ).id_enemy==0){
+
+                //TODO criar objeto PowerUP ou re-ultilizar o objeto Player//ou criar um tipo de 
+                //de inimigo novo com id diferente
+                
+                //usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
+                str_aux.x=(*fase_script->begin() ).x;
+                str_aux.y=(*fase_script->begin() ).y;
+                str_aux.z=0;
+
+                //usando smartpointer para nao da merda     
+                //aloca um novo smartpointer dentro do vetor
+                //trocar o pointer para powerup depois
                 shr_ptr = std::make_shared<Enemy>(str_aux, 0.0f, 0.5f,
                                                   create_models((*fase_script->begin()).id_enemy),
                                                   create_models((*fase_script->begin()).id_enemy));
-                send_texture((*fase_script->begin()).id_enemy, shr_ptr);
+                send_texture((*fase_script->begin()).id_enemy,shr_ptr);
+                shr_ptr.get()->setId(16);
                 vec_entitys.push_back(shr_ptr);
-                // libera o smartpointer e libera o espaco
+                //libera o smartpointer e libera o espaco
+
+
             }
 
             printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ", *time, (*fase_script->begin()).time, (*fase_script->begin()).id_enemy, (*fase_script->begin()).x, (*fase_script->begin()).y);
@@ -141,7 +167,9 @@ std::vector<vec3f_t> World::create_models(int id)
     {
     // powerup
     case 0:
+        !parse_model(&aux, "assets/scripts/powerUp.mscp");
         break;
+
     // inimigo que anda reto pra baixo
     case 1:
         !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
@@ -231,6 +259,19 @@ void World::update_entitys(float *timer_count)
         *timer_count = 0;
         vec_entitys.push_back(std::shared_ptr<Shot>(joga->playerFire()));
     }
+    int consta = vec_entitys.size();
+    for(int i =0;i<consta;i++){
+
+        //printf(" id =%d , timer =%0.2f \n",vec_entitys.at(i)->getId(),vec_entitys.at(i)->getTimer()); 
+       if(vec_entitys.at(i)->getId() ==4  && vec_entitys.at(i)->getTimer()>1.0){
+            vec_entitys.push_back( std::shared_ptr<Shot>( ((Boss *)(vec_entitys.at(i).get()))->enemyFire()  ) );
+            //printf("entrou %d z\n",vec_entitys.at(i)->getId());
+        }
+       if(vec_entitys.at(i)->getId() ==2  && vec_entitys.at(i)->getTimer()>1.0){
+            vec_entitys.push_back( std::shared_ptr<Shot>( ((Enemy *)(vec_entitys.at(i).get()))->enemyFire()  ) );
+            //printf("entrou %d z\n",vec_entitys.at(i)->getId());
+        }
+    }    
 
     for (int i = 0; i < vec_entitys.size(); i++)
     {
@@ -249,21 +290,26 @@ void World::send_texture(int id, std::shared_ptr<Enemy> shr_ptr)
     // id =3 ...
     switch (id)
     {
-        // powerup
+    // powerup
     case 0:
+        shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/powerUp.tscp"));
         break;
+
     // inimigo que anda reto pra baixo
     case 1:
         shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo1.tscp"));
         break;
+
     // helicoptero que persegue
     case 2:
         shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo2.tscp"));
         break;
-        // inimigo que para e atira
+
+    // inimigo que para e atira
     case 3:
         shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo3.tscp"));
         break;
+    //boss 1
     case 4:
         shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/chefao1.tscp"));
         break;

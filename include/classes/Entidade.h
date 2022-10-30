@@ -56,10 +56,13 @@ public:
     vec3f_t * getOrigin();
     bool getOnScreen();
     int getId();
+    float getTimer();
+    void setConst();
   
     
     //setters
     void setTexture(std::shared_ptr<Texturazer> target);
+    void setId(int id);
     
 };
 

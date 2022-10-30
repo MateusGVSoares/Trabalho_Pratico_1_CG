@@ -9,6 +9,7 @@ Entidade::Entidade(vec3f_t origin, float angle, float velocidade)
     this->timer_control_texture = 0;
     this->const_anim_texture = 1.0 / 5.0;
     this->timer = 0;
+    this->cont_stage_tex=0;
 }
 
 bool Entidade::getOnScreen()
@@ -22,9 +23,24 @@ void Entidade::setTexture(std::shared_ptr<Texturazer> target)
     this->texture = target;
 }
 
+void Entidade::setConst(){
+
+    this->cont_stage_tex++;
+}
+
+float Entidade::getTimer(){
+
+    return this->timer;
+}
+
 int Entidade::getId()
 {
     return this->id;
+}
+
+void Entidade::setId(int id)
+{
+    this->id=id;
 }
 
 vec3f_t *Entidade::getOrigin()

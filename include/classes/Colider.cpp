@@ -54,9 +54,9 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
     //vetor para alocar o q vai pro try_colisor ou so guardar em idle
     std::vector<std::shared_ptr<Entidade>> to_handle,idle;
     std::set<int> detect_col,no_col;
-
+    int flag=0;
     for(int x=0;x< vec_entitys.size();x++){
-
+        flag=0;
         for(int z=x+1;z<vec_entitys.size();z++){
 
             switch (vec_entitys[x]->getId() + vec_entitys[z]->getId())
@@ -68,6 +68,7 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                     printf("colisao 5 de %d com %d \n",x,z);
                     detect_col.insert(x);
                     detect_col.insert(z);
+                   // flag=1;
                     }
                 break;
 
@@ -77,6 +78,7 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                     printf("colisao 6 de %d com %d \n",x,z);
                     detect_col.insert(x);
                     detect_col.insert(z);
+                    //flag=1;
                     }
                 break;
 
@@ -86,6 +88,7 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                     printf("colisao 9 de %d com %d \n",x,z);
                     detect_col.insert(x);
                     detect_col.insert(z);
+                   // flag=1;
                     }
                 break;
 
@@ -95,17 +98,18 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                     printf("colisao 17 de %d com %d \n",x,z);
                         detect_col.insert(x);
                         detect_col.insert(z);
-                        /*
+                        
                             if(vec_entitys[x]->getId() ==16)
-                                //do powerup
-                            else
-                                //do powerup
-                        */
+                                vec_entitys[z]->setConst();
+                            if(vec_entitys[z]->getId() ==16)
+                                vec_entitys[x]->setConst();
+                   // flag=1;
                     }
                 break;
 
             }
-
+            if(flag==1)
+                break;
 
         }
 

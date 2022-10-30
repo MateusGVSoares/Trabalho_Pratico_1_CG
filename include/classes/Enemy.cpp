@@ -11,7 +11,7 @@ Enemy::Enemy(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t>
     this->box_model = hit_box;
     this->hit_box = hit_box;
     this->alive = 1;
-    // id vindo do script;
+    // id fixa
     this->id = 4;
     // Inicializa a velocidade
     this->velocidade = velocidade;
@@ -19,7 +19,7 @@ Enemy::Enemy(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t>
 
 Shot *Enemy::enemyFire()
 {
-
+    this->timer=0.0;
     vec3f_t dir = {
         .x = 0,
         .y = -1,
@@ -28,9 +28,9 @@ Shot *Enemy::enemyFire()
     // Ajusta o ponto de origem do tiro
     vec3f_t shotOrigin = this->origin;
 
-    shotOrigin.y -= 5;
+    shotOrigin.y -= 12;
 
-    return new Shot(shotOrigin, 0, 1.0f, dir, this->model, this->hit_box, "enemyShot.tscp");
+    return new Shot(shotOrigin, 0, 1.0f, dir, this->model, this->hit_box, "enemyShot.tscp",this->cont_stage_tex);
 }
 
 void Enemy::draw()

@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Colider.h"
 #include "Player.h"
+#include "Boss.h"
 #include "Background.h"
 #include <vector>
 #include <list>
