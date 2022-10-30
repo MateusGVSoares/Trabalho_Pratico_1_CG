@@ -1,6 +1,4 @@
 TEXTURE_SCRIPT
-2
+1
 4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
-textura_teste.png
-4;0.0,0.0;1.0,0.0;1.0,1.0;0.0,1.0;
-pessoa.png
+sline_texture.png

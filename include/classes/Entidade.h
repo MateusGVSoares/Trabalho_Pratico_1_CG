@@ -26,7 +26,6 @@ class Entidade
 {
 protected:
     float angle;
-    int layer;
     bool on_screen;
     float velocidade;
     int id;
@@ -44,21 +43,24 @@ protected:
 
 
 public:
-    Entidade(vec3f_t origin, int layer, float angle,float velocidade);
+    Entidade(vec3f_t origin, float angle,float velocidade);
     void updateModel();
-    //getters
-    std::vector<vec3f_t> getModel();
-    bool getOnScreen();
-    int getId();
-    std::vector<vec3f_t> getHitbox();
-    //setters
-    void setTexture(std::shared_ptr<Texturazer> target);
-    vec3f_t getOrigin();
+
     // Virtual functions
     virtual int destroy()=0;
     virtual void move() = 0;
     virtual void draw() = 0;
-    virtual void treatColide(int col_type) = 0; // Trata colisão depend
+    
+    //getters
+    std::vector<vec3f_t> *getHitbox();
+    vec3f_t * getOrigin();
+    bool getOnScreen();
+    int getId();
+  
+    
+    //setters
+    void setTexture(std::shared_ptr<Texturazer> target);
+    
 };
 
 #endif

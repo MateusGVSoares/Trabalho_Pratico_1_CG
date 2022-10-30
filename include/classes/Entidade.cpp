@@ -1,13 +1,11 @@
 #include "Entidade.h"
 
-Entidade::Entidade(vec3f_t origin, int layer, float angle, float velocidade)
+Entidade::Entidade(vec3f_t origin, float angle, float velocidade)
 {
     this->origin = origin;
-    this->layer = layer;
     this->angle = angle;
     this->velocidade = velocidade;
-    this->id =-1;
-    this->alive=1;
+    this->alive = 1;
     this->timer_control_texture = 0;
     this->const_anim_texture = 1.0 / 5.0;
     this->timer = 0;
@@ -18,18 +16,20 @@ bool Entidade::getOnScreen()
     return this->on_screen;
 }
 
-void Entidade::setTexture(std::shared_ptr<Texturazer> target){
+void Entidade::setTexture(std::shared_ptr<Texturazer> target)
+{
 
     this->texture = target;
 }
 
 int Entidade::getId()
 {
-
     return this->id;
 }
-vec3f_t Entidade::getOrigin(){
-    return this->origin;
+
+vec3f_t *Entidade::getOrigin()
+{
+    return &this->origin;
 }
 
 void Entidade::updateModel()
@@ -89,7 +89,7 @@ void Entidade::updateModel()
         //     std::cout << "Freed !! \n";
         // }
 
-        if(this->hit_box[i].x <= max_x && this->hit_box[i].x >= -max_x && this->hit_box[i].y < max_y && this->hit_box[i].y > -max_y)
+        if (this->hit_box[i].x <= max_x && this->hit_box[i].x >= -max_x && this->hit_box[i].y<max_y &&this->hit_box[i].y> - max_y)
         {
             this->on_screen = 1;
         }
@@ -103,12 +103,7 @@ void Entidade::updateModel()
     freeMatrix(point);
 }
 
-std::vector<vec3f_t> Entidade::getModel()
+std::vector<vec3f_t> *Entidade::getHitbox()
 {
-    return this->model;
-}
-
-std::vector<vec3f_t> Entidade::getHitbox()
-{
-    return this->hit_box;
+    return &this->hit_box;
 }

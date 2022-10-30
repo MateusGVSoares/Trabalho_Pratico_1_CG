@@ -1,9 +1,9 @@
 #include "Colider.h"
 
 //metodo que calcula a colisao
-bool Colider::try_colison(vec3f_t origin ,std::vector<vec3f_t>  v1 , std::vector<vec3f_t> v2)
+bool Colider::try_colison(vec3f_t * origin ,std::vector<vec3f_t> *  v1 , std::vector<vec3f_t> * v2)
 {
-    vec3f_t diag_s = origin,
+    vec3f_t diag_s = *origin,
             diag_e,
             edge_s,
             edge_e,
@@ -13,17 +13,17 @@ bool Colider::try_colison(vec3f_t origin ,std::vector<vec3f_t>  v1 , std::vector
 
     int overlap = 0;
 
-    for (int i = 0; i < v1.size(); i++)
+    for (int i = 0; i < v1->size(); i++)
     {
 
         // move_vec.x = 0;
         // move_vec.y = 0;
-        diag_e = v1[i];
+        diag_e = v1->at(i);
 
-        for (int j = 0; j < v2.size(); j++)
+        for (int j = 0; j < v2->size(); j++)
         {
-            edge_s = v2[j];
-            edge_e = v2[(j + 1) % v2.size() ];
+            edge_s = v2->at(j);
+            edge_e = v2->at((j + 1) % v2->size());
 
             limit = (edge_e.x - edge_s.x) * (diag_s.y - diag_e.y) - (diag_s.x - diag_e.x) * (edge_e.y - edge_s.y);
             det_1 = ((edge_s.y - edge_e.y) * (diag_s.x - edge_s.x) + (edge_e.x - edge_s.x) * (diag_s.y - edge_s.y)) / limit;

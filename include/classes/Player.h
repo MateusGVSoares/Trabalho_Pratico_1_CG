@@ -17,9 +17,10 @@ class Player : public Entidade
     private:
         int hp ;
         int vidas ;
+        std::vector<vec3f_t> shot_model;
         
     public:
-        Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model,std::vector<GLuint> tex_vec,int id);
+        Player(vec3f_t origin,  float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model);
         using Entidade::Entidade;
         Shot* playerFire();
         int updateOnKeyboard(keyboard_t keys);
@@ -28,7 +29,6 @@ class Player : public Entidade
         void move() override;
         void draw() override;
         int destroy() override;
-        void treatColide(int col_type) override;
 };
 
 #endif

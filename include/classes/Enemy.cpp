@@ -1,55 +1,47 @@
 #include "Enemy.h"
 
-
-Enemy::Enemy(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model): Entidade(origin, layer, angle,velocidade)
+Enemy::Enemy(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model) : Entidade(origin, angle, velocidade)
 {
     // Inicializa as parada
     this->origin = origin;
-    this->layer = layer;
     this->angle = angle;
     this->model = model;
 
     // Inicializa o modelo e a HitBox
     this->box_model = hit_box;
     this->hit_box = hit_box;
-    this->alive=1;
+    this->alive = 1;
     // id vindo do script;
     this->id = 4;
     // Inicializa a velocidade
     this->velocidade = velocidade;
 };
 
-Shot Enemy::enemyFire(){
+Shot *Enemy::enemyFire()
+{
 
     vec3f_t dir = {
         .x = 0,
-        .y = 1,
+        .y = -1,
         .z = 0};
-    //Passa os dados para serem criado o tiro, tiro com id=4 tiro do inimigo para ser tratado no colider
-    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model,4);
 
-    return ret_shot;
+    // Ajusta o ponto de origem do tiro
+    vec3f_t shotOrigin = this->origin;
 
+    shotOrigin.y -= 5;
+
+    return new Shot(shotOrigin, 0, 1.0f, dir, this->model, this->hit_box, "enemyShot.tscp");
 }
 
-void Enemy::setId(int a){
-    this->id =a;
-}
+void Enemy::draw()
+{
 
-void Enemy::move(){
-    
-    origin.y -=velocidade;
-
-};
-
-void Enemy::draw(){
-
-glPushMatrix();
+    glPushMatrix();
 
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
 
-    glColor3ub(140, 65, 43);
+    glColor3ub(255, 255, 255);
 
     // Carrega o objeto de textura para manipular no OpenGL
     glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
@@ -63,15 +55,17 @@ glPushMatrix();
     glEnd();
 
     glPopMatrix();
-
 };
 
+void Enemy::move()
+{
+    this->origin.x += this->direction.x;
+    this->origin.y += this->direction.y;
+    this->origin.z += this->direction.z;
+}
 
-void Enemy::treatColide(int col_type){
-
-
-};
-int Enemy::destroy(){
+int Enemy::destroy()
+{
 
     return 1;
 }

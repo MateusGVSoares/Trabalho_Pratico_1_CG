@@ -2,16 +2,20 @@
 
 // #define DRAW_BOX
 
-Player::Player(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model, std::vector<GLuint> tex_vec, int id) : Entidade(origin, layer, angle, velocidade)
-{
+Player::Player(vec3f_t origin,
+               float angle,
+               float velocidade,
+               std::vector<vec3f_t> hit_box,
+               std::vector<vec3f_t> model) : Entidade(origin, angle, velocidade){
     // Deixa o player alocar os modelos
     this->model = model;
     this->box_model = hit_box;
     this->hit_box = hit_box;
 
     this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
-    this->hp=2;
-    this->vidas=2;
+    this->hp = 2;
+    this->vidas = 2;
+
     // ID para colisao(não é o id de carregamento das coisas do script)
     this->id = 1;
 };
@@ -73,23 +77,26 @@ void Player::draw()
 
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
-    glColor3ub(234, 55, 43);
+    glColor3ub(255,255,255);
 
     // Carrega o objeto de textura para manipular no OpenGL
-    //glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
+    // glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
 
     // A é a textura 1
-    if(keyboard.a == 1 && keyboard.d == 0 || keyboard.left == 1 && keyboard.right == 0){
+    if (keyboard.a == 1 && keyboard.d == 0 || keyboard.left == 1 && keyboard.right == 0)
+    {
         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[3]);
     }
-    // D é a textura 2 
-    else if(keyboard.d == 1 && keyboard.a == 0 || keyboard.right == 1 && keyboard.left == 0){
+    // D é a textura 2
+    else if (keyboard.d == 1 && keyboard.a == 0 || keyboard.right == 1 && keyboard.left == 0)
+    {
         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[4]);
     }
-    else{
+    else
+    {
         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
     }
-    
+
     glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < this->model.size(); i++)
     {
@@ -115,7 +122,7 @@ void Player::draw()
 #endif
 }
 
-Shot * Player::playerFire()
+Shot *Player::playerFire()
 {
     vec3f_t dir = {
         .x = 0,
@@ -123,39 +130,33 @@ Shot * Player::playerFire()
         .z = 0};
 
     vec3f_t shot_origin = this->origin;
-    shot_origin.y+=12;
+    shot_origin.y += 12;
 
-
-    // Passa os dados para serem criado o tiro para ser tratado no colider 
-    // Tiro com id=2 --> tiro do player 
-    return new Shot(shot_origin, 1, 0, 0.5f, dir, this->model, this->box_model, 2);
+    // Passa os dados para serem criado o tiro para ser tratado no colider
+    // Tiro com id=2 --> tiro do player
+    return new Shot(shot_origin, 90.0f, 2.0f, dir,this->id,"assets/scripts/player_shot.tscp");
 }
 
-int Player::destroy(){
+int Player::destroy()
+{
 
-    //printf("hp = %d , vidas= %d \n",this->hp,this->vidas);
+    // printf("hp = %d , vidas= %d \n",this->hp,this->vidas);
 
-    if(hp>0){
+    if (hp > 0)
+    {
         hp--;
     }
-    
 
-    if(vidas>0 && hp == 0){
-        hp=2;
+    if (vidas > 0 && hp == 0)
+    {
+        hp = 2;
         vidas--;
     }
 
-    if(vidas ==0 && hp==0){
+    if (vidas == 0 && hp == 0)
+    {
         return 1;
     }
 
-    
-
     return 0;
-
-}
-
-void Player::treatColide(int col_type)
-{
-    printf("Colided with %d layer \n", col_type);
 }

@@ -4,7 +4,7 @@
 float razaoAspecto = 0;
 float max_x = 0, max_y = 0;
 
-keyboard_t keyboard;
+keyboard_t keyboard = {0};
 
 // Callback para pressionamento do teclado
 void keyboardFct(unsigned char key, int x, int y)

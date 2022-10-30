@@ -1,47 +1,54 @@
 #include "Boss.h"
 
-Boss::Boss(vec3f_t origin, int layer, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model): Entidade(origin, layer, angle,velocidade)
+Boss::Boss(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model) : Entidade(origin, angle, velocidade)
 {
     // Inicializa as parada
     this->origin = origin;
-    this->layer = layer;
     this->angle = angle;
     this->model = model;
 
     // Inicializa o modelo e a HitBox
     this->box_model = hit_box;
     this->hit_box = hit_box;
-    this->alive=1;
-    this->hp =6;
+    this->alive = 1;
+    this->hp = 6;
     this->timer = 0.0f;
+
     // id que é tipo inimigo
     this->id = 4;
+
     // Inicializa a velocidade
     this->velocidade = velocidade;
 };
 
-Shot Boss::enemyFire(){
+Shot *Boss::enemyFire()
+{
 
     vec3f_t dir = {
         .x = 0,
         .y = 1,
         .z = 0};
-    //Passa os dados para serem criado o tiro, tiro com id=4 tiro do inimigo para ser tratado no colider
-    Shot ret_shot(this->origin, 1, 0, 0.5f, dir, this->model, this->box_model,4);
 
-    return ret_shot;
+    // Cria um tiro com as informacoes do inimigo
 
+    return new Shot(this->origin,
+                    0,
+                    0.5f,
+                    dir,
+                    this->model,
+                    this->box_model,
+                    "");
 }
 
-void Boss::move(){
-    
-    origin.y -=0.5;
-
+void Boss::move()
+{
+    origin.y -= 0.5;
 };
 
-void Boss::draw(){
+void Boss::draw()
+{
 
-glPushMatrix();
+    glPushMatrix();
 
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
@@ -59,22 +66,16 @@ glPushMatrix();
     glEnd();
 
     glPopMatrix();
-
-
 };
 
-int Boss::destroy(){
+int Boss::destroy()
+{
 
-    if(this->hp>0)
+    if (this->hp > 0)
         hp--;
     else
         return 1;
 
     return 0;
-
 }
 
-void Boss::treatColide(int col_type){
-
-
-    }
