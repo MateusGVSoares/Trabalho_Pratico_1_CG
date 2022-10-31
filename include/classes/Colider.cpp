@@ -49,7 +49,7 @@ bool Colider::try_colison(vec3f_t * origin ,std::vector<vec3f_t> *  v1 , std::ve
 
 
 //metodo que recebe as coisas que estao na tela
-std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::shared_ptr<Entidade>> vec_entitys){
+std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::shared_ptr<Entidade>> vec_entitys,int *pontos){
 
     //vetor para alocar o q vai pro try_colisor ou so guardar em idle
     std::vector<std::shared_ptr<Entidade>> to_handle,idle;
@@ -95,7 +95,7 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
             case 17:
             // colisao do player com powerup pois a soma sempre será igual a 17
                 if(try_colison(vec_entitys.at(x)->getOrigin(),vec_entitys.at(x)->getHitbox(),vec_entitys.at(z)->getHitbox() ) ){
-                   // printf("colisao 17 de %d com %d \n",x,z);
+                   //printf("colisao 17 de %d com %d \n",x,z);
                         
                             if(vec_entitys[x]->getId() ==16){
                                 ((Player *)(vec_entitys.at(z)).get())->treatUpgrade( ((PowerUp *)(vec_entitys.at(x)).get())->getType());
@@ -130,7 +130,7 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
     //bota no vetor handle, apenas os que tiveam colisao
     //chama o handler para tratar as colisoes
     //ele vai devolver o que for feito. Ex se for para destruir devolverá faltando aquele ponteiro
-    to_handle = handle_colison(to_handle);
+    to_handle = handle_colison(to_handle,pontos);
 
     //coloca o q sobrou dentro do idle
     for(int x=0;x<to_handle.size();x++)
@@ -151,19 +151,24 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
 //tiro player->tiro inimigo  //player -> powerups
 
 
-std::vector<std::shared_ptr<Entidade>> Colider::handle_colison(std::vector<std::shared_ptr<Entidade>> vec_entitys){
+std::vector<std::shared_ptr<Entidade>> Colider::handle_colison(std::vector<std::shared_ptr<Entidade>> vec_entitys,int *pontos){
 
     for(int x=0;x<vec_entitys.size();x++){
         //chamar o metodo padrao de destruicao das coisas que vai ser implementado pela Entidade
         //
         if(vec_entitys.at(x)->destroy()){
+            if(vec_entitys.at(x)->getId() == 4)
+                *pontos+=100;
+            if(vec_entitys.at(x)->getId() == 16)
+                *pontos+=1000;
+
             vec_entitys.erase(vec_entitys.begin()+x);
             x--;
         }
             
     }
 
-
+    
 
     return vec_entitys;
 

@@ -19,8 +19,10 @@ class World
 {
 
 private:
-    int troca = 0;
-
+    int troca ;
+    int troca_mission;
+    int vida_player;
+    int pontos;
     std::queue<std::list<mission_wave>> stack_mission;
     // usar smartpointer
     std::vector<std::shared_ptr<Entidade>> vec_entitys;
@@ -29,6 +31,7 @@ private:
     Colider *colisor;
     std::shared_ptr<Player> actual_player;
     std::shared_ptr<Boss>  actual_boss;
+    //std::shared_ptr<Pontuacao>  pontos;
     std::shared_ptr<Background> background;
 
 public:
@@ -56,6 +59,10 @@ public:
 
     // atualiza todas as entidades presentes na tela
     void update_entitys(float *timer_count);
+
+    //reinicia o jogo se o player morrer
+    int mission_reset();
+    
 
     // inicializa o player
     void initPlayer();

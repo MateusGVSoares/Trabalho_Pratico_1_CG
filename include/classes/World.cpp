@@ -5,28 +5,39 @@ void World::initialize_script_mission()
 
     std::list<mission_wave> aux;
 
-    // missao 1
-    parse_mission(&aux, "assets/scripts/roteiro1");
-    this->stack_mission.push(aux);
-    aux.clear();
-
-    // missao 2
-    /*
-    parse_mission(&aux, "assets/scripts/roteiro2");
-    this->stack_mission.push(aux);
-    aux.clear();
-    */
     /*
     //missao 3
-    parse_mission(&aux,"roteiro1");
+    if(troca_mission==3)
+    parse_mission(&aux,"roteiro4");
     this->stack_mission.push(aux);
     aux.clear();
 
-    //missao 4
-    parse_mission(&aux,"roteiro1");
+
+    //missao 3
+    if(troca_mission==2)
+    parse_mission(&aux,"roteiro3");
     this->stack_mission.push(aux);
     aux.clear();
     */
+    //printf("entrou AQUI NESSA MERDA\n");
+    // missao 2
+    if(troca_mission==1){
+        printf("entrou AQUI mission 2\n");
+        parse_mission(&aux, "assets/scripts/roteiro2");
+        this->stack_mission.push(aux);
+        aux.clear();
+        troca_mission++;
+    }
+
+    // missao 1
+    if(troca_mission==0){
+        printf("entrou AQUI mission 1\n");
+        parse_mission(&aux, "assets/scripts/roteiro1");
+        this->stack_mission.push(aux);
+        aux.clear();
+        troca_mission++;
+    }
+
 }
 
 void World::start_mission(float *time)
@@ -39,9 +50,10 @@ void World::start_mission(float *time)
 
     if (*time > 90.0 && !stack_mission.empty() && troca < 1)
     {
+    
         troca++;
         *time = 0;
-        stack_mission.pop();
+        initialize_script_mission();
         // troca a textura do background
         background->trocar_back();
         printf("entrou 2 roteiro, time =%0.2f\n", *time);
@@ -63,7 +75,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
         {
             if ((*fase_script->begin()).id_enemy == 4 )
             {
-                printf("criando boss \n");
+                //printf("criando boss \n");
                 str_aux.x = (*fase_script->begin()).x;
                 str_aux.y = (*fase_script->begin()).y;
                 str_aux.z = 0;
@@ -119,7 +131,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
                 // Kamikaze
                 else if ((*fase_script->begin()).id_enemy == 2)
                 {
-                    shr_ptr = std::make_shared<Kamikaze>(str_aux, 0, 1.0f);
+                    shr_ptr = std::make_shared<Kamikaze>(str_aux, 0, 2.2f);
                 }
                 // Shooter
                 else if ((*fase_script->begin()).id_enemy == 3)
@@ -144,7 +156,9 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 World::World()
 {
     actual_player.reset();
-
+    this->troca_mission=0;
+    this->vida_player=2;
+    this->troca=0;
     colisor = new Colider();
     initbackGround();
     initPlayer();
@@ -154,7 +168,7 @@ World::World()
 std::vector<std::shared_ptr<Entidade>> World::send_to_colider(std::vector<std::shared_ptr<Entidade>> vec_hitbox)
 {
     // chama o colider
-    return colisor->check_colison(vec_hitbox);
+    return colisor->check_colison(vec_hitbox,&this->pontos);
 }
 
 // metodo para criar as coordenadas das hitbox e modelos para jogar dentro do vetor Entidades
@@ -215,7 +229,7 @@ void World::draw_vec_entitys()
         }
         else
         {
-            printf("Deleted an entity of id %d \n", vec_entitys[x]->getId());
+            //printf("Deleted an entity of id %d \n", vec_entitys[x]->getId());
             vec_entitys.erase(vec_entitys.begin() + x);
             x--;
         }
@@ -252,6 +266,16 @@ void World::update_entitys(float *timer_count)
 {
 
     int shot = 0;
+    if(actual_player.get()->alive==0 && this->vida_player>0){
+        actual_player.reset();
+        //printf("entrou krl \n");
+        initPlayer();
+        actual_player->setInvecible();
+        this->vida_player--;
+        this->pontos-=1000;
+        }
+
+
     // Updates the movements
     if (actual_player != nullptr)
         shot = actual_player->updateOnKeyboard(keyboard);
@@ -284,6 +308,7 @@ void World::update_entitys(float *timer_count)
             ((Enemy *)vec_entitys.at(i).get())->move(this->actual_player->getOrigin());
         else
             vec_entitys.at(i)->move();
+
         vec_entitys.at(i)->updateModel();
     }
 
@@ -349,6 +374,15 @@ void World::initbackGround()
 
     background->setTexture(std::make_shared<Texturazer>("assets/scripts/background1.tscp"));
     vec_entitys.push_back(background);
+}
+
+int World::mission_reset(){
+
+    if(this->vida_player==0)
+        return 1;
+    else
+        return 0;
+
 }
 
 // Por favor alguem me ajude >_< - RIP CAMISA 09

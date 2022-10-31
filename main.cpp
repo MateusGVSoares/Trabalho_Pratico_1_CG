@@ -34,6 +34,18 @@ Menu *menu;
 float timer_count = 0;
 float world_time = 0;
 int confirm = 0;
+// YES, this cause a memory leak!
+ void startMenu()
+ {
+     menu = new Menu();
+     menu->inicializa();
+ }
+
+ void startMundo()
+ {
+     mundo = new World();
+     mundo->initialize_script_mission();
+ }
 
 void drawUpdate()
 {
@@ -77,7 +89,13 @@ void onTimeUpdate(int time)
      {
         //printf("time = %0.2f \n",world_time);
         mundo->start_mission(&world_time);
+        if(mundo->mission_reset()){
+            startMenu();
+            startMundo();
+        }
+        else{
             mundo->update_entitys(&timer_count);
+        }
      }
 
      if (menu->flagpermission == 2)
@@ -120,19 +138,6 @@ void configGlut()
     // Ignora repetições de teclas e verifica apenas o pressionamento e qnd soltar
     glutIgnoreKeyRepeat(1);
 }
-
-// YES, this cause a memory leak!
- void startMenu()
- {
-     menu = new Menu();
-     menu->inicializa();
- }
-
- void startMundo()
- {
-     mundo = new World();
-     mundo->initialize_script_mission();
- }
 
 int main(int argc, char **argv)
 {

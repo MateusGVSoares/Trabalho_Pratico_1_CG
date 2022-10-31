@@ -16,6 +16,7 @@ Player::Player(vec3f_t origin,
     this->texture = std::make_shared<Texturazer>("assets/scripts/player.tscp");
     this->hp = 10;
     this->vidas = 2;
+    this->alive=1;
     this->cont_stage_tex = 0;
     this->velocidade = velocidade;
     this->invecible = 0;
@@ -100,13 +101,13 @@ int Player::updateOnKeyboard(keyboard_t keys)
 void Player::move()
 {
     if (this->select_shot == 1)
-        this->timer += (10.0 / 1000.0 * level_gun1);
+        this->timer += (11.0 / 1000.0 * level_gun1);
 
     else
-        this->timer += (8.0 / 1000.0);
+        this->timer += (6.0 / 1000.0);
 
     this->timer_troca_gun += 16.0 / 1000.0;
-    this->timer_invecible += 21.0 / 1000.0;
+    this->timer_invecible += 22.0 / 1000.0;
 
     if (invecible == 1 && timer_invecible > 1.5)
     {
@@ -127,36 +128,36 @@ void Player::treatUpgrade(int type)
     // Verifica se e upgrade ou vida :_:
     if (type == 0)
     {
-        //printf("Ta ficando monstro >_< \n");
+        printf("Ta ficando monstro >_< \n");
         if (this->select_shot == 1 && this->level_gun1 < 3)
         {
-            //printf("entrou 1\n");
+            printf("entrou 1\n");
             this->level_gun1++;
         }
 
         else if (this->select_shot == -1 && this->level_gun2 < 3)
         {
-            //printf("entrou 2\n");
+            printf("entrou 2\n");
             this->level_gun2++;
         }
 
         else if (this->select_shot == 1 && this->level_gun1 == 3 && this->level_gun2 < 3)
         {
-            //printf("entrou 3\n");
+            printf("entrou 3\n");
             this->level_gun2++;
         }
 
         else if (this->select_shot == -1 && this->level_gun2 == 3 && this->level_gun1 < 3)
         {
-            //printf("entrou 4\n");
+            printf("entrou 4\n");
             this->level_gun1++;
         }
         else
         {
             // Se n fizer nada com o up, restaura hp
-            if (this->hp >8 && hp<11)
+            if (this->hp ==9 )
                 this->hp += 1;
-            else
+            else if(this->hp <9)
                 this->hp+=2;
         }
     }
@@ -164,12 +165,16 @@ void Player::treatUpgrade(int type)
     {
         //printf("Pegou vidinha >_< \n");
         // Restaura 2 de hp
-        if (this->hp >8 && hp<11)
-            this->hp += 1;
-        else
-            this->hp+=2;
+            if (this->hp ==9 )
+                this->hp += 1;
+            else if(this->hp <9)
+                this->hp+=2;
         //printf("Hp do player : %d \n", this->hp);
     }
+
+    printf("level gun1 =%d , gun2=%d , hp =%d \n",this->level_gun1,this->level_gun2,this->hp);
+
+
 }
 
 void Player::draw()
@@ -257,6 +262,10 @@ Shot *Player::playerFire()
         return new Shot(shot_origin, 0.0f, 2.7f, dir, this->id, "assets/scripts/player_shot.tscp", 1, this->level_gun2);
 }
 
+void Player::setInvecible(){
+    this->invecible=1;
+}
+
 int Player::destroy()
 {
 
@@ -271,6 +280,7 @@ int Player::destroy()
         }
         else
         {
+            this->alive=0;
             return 1;
         }
     }

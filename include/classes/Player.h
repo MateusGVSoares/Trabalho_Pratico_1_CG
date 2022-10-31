@@ -31,6 +31,7 @@ public:
     Shot *playerFire();
     int updateOnKeyboard(keyboard_t keys);
     void treatUpgrade(int type);
+    void setInvecible();
     int *getHp();
     // Virtual methods
     void move() override;

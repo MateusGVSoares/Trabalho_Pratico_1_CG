@@ -138,6 +138,54 @@ void Kamikaze::move(vec3f_t *point)
 // _____________________________________-
 
 // __RUNNNER__
+Kamikaze2::Kamikaze2(vec3f_t origin,
+                   float angle,
+                   float velocidade) : Enemy(origin, angle, velocidade)
+{
+    this->angle = 180;
+    this->texture = std::make_shared<Texturazer>("assets/scripts/Kamikaze.tscp");
+
+    this->distance = 0;
+
+    std::vector<vec3f_t> aux;
+
+    if (parse_model(&aux, "assets/scripts/Kamikaze.mscp"))
+    {
+        printf("Deu ruim renderizando o modelo do inimigo KAMIKAZE \n");
+    }
+
+    this->model = aux;
+    this->hit_box = aux;
+    this->box_model = aux;
+    this->id = 4;
+}
+void Kamikaze2::move(vec3f_t *point){
+    float distancia=150, ang=1.57;
+
+
+    if(origin.x<((point->x+distancia*cos(ang))-4) || origin.x>((point->x+distancia*cos(ang))+4) || 
+    origin.y<(point->y+distancia*sin(ang))-4 || origin.y>(point->y+distancia*sin(ang))+4 ){
+
+        if(origin.x<(point->x+distancia*cos(ang)))
+        origin.x+=1.5;
+        if(origin.x>(point->x+distancia*cos(ang)))
+        origin.x-=1.5;
+        if(origin.y<(point->y+distancia*sin(ang)))
+        origin.y+=1.5;
+        if(origin.y>(point->y+distancia*sin(ang)))
+        origin.y-=1.5;
+    }
+    else{
+        ang+=(M_PI/60);
+        if(ang>=2*M_PI)
+        ang=0;
+    }
+
+    distancia-=0.1;
+}
+// _____________________________________-
+
+// __RUNNNER__
 
 Runner::Runner(vec3f_t origin,
                float angle,

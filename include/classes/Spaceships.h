@@ -43,6 +43,17 @@ public:
     void move(vec3f_t *point) override;
 };
 
+class Kamikaze2 : public Enemy
+{
+private:
+    float distance;
+
+public:
+    using Enemy::Enemy;
+    Kamikaze2(vec3f_t origin, float angle, float velocidade);
+    void move(vec3f_t *point) override;
+};
+
 class Runner : public Enemy
 {
 

@@ -23,12 +23,12 @@ public:
 
 //metodo que recebe as coisas que estao na tela(vindo da classe WORLD)
 
-std::vector<std::shared_ptr<Entidade>> check_colison(std::vector<std::shared_ptr<Entidade>> vec_hitboxes);
+std::vector<std::shared_ptr<Entidade>> check_colison(std::vector<std::shared_ptr<Entidade>> vec_hitboxes,int *pontos);
 
 bool try_colison(vec3f_t * origin ,std::vector<vec3f_t> *  v1 , std::vector<vec3f_t> * v2);
 
 //metodo que trata as flags para ser tradado os eventos
-std::vector<std::shared_ptr<Entidade>> handle_colison(std::vector<std::shared_ptr<Entidade>> vec_hitboxes);
+std::vector<std::shared_ptr<Entidade>> handle_colison(std::vector<std::shared_ptr<Entidade>> vec_hitboxes,int *pontos);
 
 };
 

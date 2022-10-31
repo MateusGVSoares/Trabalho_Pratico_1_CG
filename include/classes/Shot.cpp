@@ -78,6 +78,12 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
     std::vector<vec3f_t> modelo;
     vec3f_t aux;
     float size = 12;
+    if(const_stage_tex==1 && level_gun==1)  
+        size = 16;
+    if(const_stage_tex==1 && level_gun==2)  
+        size = 18;
+    if(const_stage_tex==1 && level_gun==3)  
+        size = 22;
 
     aux.x = -size;
     aux.y = size;
@@ -99,7 +105,14 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
 
     modelo.push_back(aux);
 
-    this->model = this->hit_box = this->box_model = modelo;
+    this->hit_box = this->box_model = modelo;
+
+    for(int x=0;x<4;x++){
+        modelo[x].x*=1.2;
+        modelo[x].y*=1.2;
+    }
+    this->model=modelo;
+
 
     // hp da bala
     if (this->cont_stage_tex == 0)
