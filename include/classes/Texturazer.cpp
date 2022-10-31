@@ -92,6 +92,7 @@ int Texturazer::parse_script(const char *file_name)
         if (idTextura == 0)
         {
             printf("Erro do SOIL: '%s'\n", SOIL_last_result());
+            return 1;
         }
         else
             this->loaded_textures.push_back(idTextura);

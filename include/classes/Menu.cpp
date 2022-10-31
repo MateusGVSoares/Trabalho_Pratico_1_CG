@@ -66,6 +66,7 @@ GLuint Menu::load_texture(const char* file){
 
     if (idTextura == 0) {
         printf("Erro do SOIL: '%s'\n", SOIL_last_result());
+        printf(" Arquivo : %s \n ",file);
     }
 
     return idTextura;

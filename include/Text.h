@@ -3,7 +3,7 @@
 
 #include <GL/glut.h>
 
-void print(const char *text, void *font, float x, float y, GLuint red, GLuint green, GLuint blue);
+void print(const char *text, void *font, float x, float y, GLuint red, GLuint green, GLuint blue, GLuint alpha);
 
 
 #endif

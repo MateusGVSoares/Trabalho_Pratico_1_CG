@@ -1,7 +1,7 @@
 
 #include "Shot.h"
 
-#define DRAW_BOX
+// #define DRAW_BOX
 
 Shot::Shot(vec3f_t origin,
            float angle,
@@ -75,14 +75,15 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
     this->direction = direction;
 
     // Coisas de hitbox (HARD-CODED KKK)
-    std::vector<vec3f_t> modelo;
+    std::vector<vec3f_t> modelo, modelo_hit_box;
+
     vec3f_t aux;
     float size = 12;
-    if(const_stage_tex==1 && level_gun==1)  
+    if (const_stage_tex == 1 && level_gun == 1)
         size = 16;
-    if(const_stage_tex==1 && level_gun==2)  
+    if (const_stage_tex == 1 && level_gun == 2)
         size = 18;
-    if(const_stage_tex==1 && level_gun==3)  
+    if (const_stage_tex == 1 && level_gun == 3)
         size = 22;
 
     aux.x = -size;
@@ -105,14 +106,29 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
 
     modelo.push_back(aux);
 
-    this->hit_box = this->box_model = modelo;
+    if (cont_stage_tex == 0 || cont_stage_tex == 1)
+    {
+        for (int i = 0; i < modelo.size(); i++)
+        {
+            aux.x = modelo[i].x / 2;
+            aux.y = modelo[i].y / 2;
 
-    for(int x=0;x<4;x++){
-        modelo[x].x*=1.2;
-        modelo[x].y*=1.2;
+            modelo_hit_box.push_back(aux);
+        }
+
+        this->hit_box = this->box_model = modelo_hit_box;
     }
-    this->model=modelo;
+    else
+        this->hit_box = this->box_model = modelo;
 
+    this->model = modelo;
+
+    for (int x = 0; x < 4; x++)
+    {
+        modelo[x].x *= 1.2;
+        modelo[x].y *= 1.2;
+    }
+    this->model = modelo;
 
     // hp da bala
     if (this->cont_stage_tex == 0)
@@ -130,6 +146,10 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
     {
         this->id = 2; // Tiro do player
     }
+    else if (creator_id == 3)
+    {
+        this->id = 8;
+    }
     else if (creator_id == 4)
     {
         this->id = 8; // Tiro do inimigo
@@ -146,9 +166,10 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
     this->angle = angle;
     this->velocidade = velocidade;
     this->direction = direction;
+    this->creator_id = creator_id;
 
     // Coisas de hitbox (HARD-CODED KKK)
-    std::vector<vec3f_t> modelo;
+    std::vector<vec3f_t> modelo, modelo_hit_box;
     vec3f_t aux;
     float size = 12;
 
@@ -172,7 +193,23 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
 
     modelo.push_back(aux);
 
-    this->model = this->hit_box = this->box_model = modelo;
+    if (cont_stage_tex == 0 || cont_stage_tex == 1)
+    {
+        for (int i = 0; i < modelo.size(); i++)
+        {
+            aux.x = modelo[i].x / 2;
+            aux.y = modelo[i].y / 2;
+
+            modelo_hit_box.push_back(aux);
+        }
+
+        this->hit_box = this->box_model = modelo_hit_box;
+    }
+    else
+        this->hit_box = this->box_model = modelo;
+
+    this->model = modelo;
+
     // hp da bala
     if (this->cont_stage_tex == 0)
         this->hp = 1;
@@ -184,7 +221,7 @@ Shot::Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction, int
 
 void Shot::move()
 {
-    if(!this->on_screen)
+    if (!this->on_screen)
     {
         this->alive = 0;
         // printf(" PLEASE DELETE THIS SHOT KKKK \n");
@@ -202,9 +239,10 @@ void Shot::draw()
 
     timer += (float)16 / 1000.0;
     // printf("const_stage = %d \n",this->cont_stage_tex);
-    if (timer >= 0.035)
-    { // Lógica baseada em powerUps
-        if (cont_stage_tex == 0)
+
+    if (cont_stage_tex == 0)
+    {
+        if (timer >= 0.035)
         {
             const_anim_texture = (float)(1.0 / 5.0);
             if (timer_control_texture <= 0.8)
@@ -215,27 +253,16 @@ void Shot::draw()
             {
                 timer_control_texture = 0.2;
             }
+            timer = 0;
         }
-
-        if (cont_stage_tex == 1)
+    }
+    else if (cont_stage_tex == 1)
+    {
+        if (timer >= 0.035)
         {
             const_anim_texture = (float)(1.0 / 9.0);
             // printf("%0.3f const anim", const_anim_texture);
-            if (timer_control_texture <= const_anim_texture)
-            {
-                timer_control_texture += const_anim_texture;
-            }
-            else
-            {
-                timer_control_texture = 0;
-            }
-        }
-
-        if (cont_stage_tex == 2)
-        {
-            const_anim_texture = (float)(1.0 / 7.0);
-            // printf("%0.3f const anim", const_anim_texture);
-            if (timer_control_texture <= const_anim_texture)
+            if (timer_control_texture <= const_anim_texture * 8)
             {
                 timer_control_texture += const_anim_texture;
             }
@@ -243,8 +270,25 @@ void Shot::draw()
             {
                 timer_control_texture = const_anim_texture;
             }
+            timer = 0;
         }
-        timer = 0;
+    }
+    else if (cont_stage_tex == 2)
+    {
+        if (timer >= 0.035)
+        {
+            const_anim_texture = (float)(1.0 / 7.0);
+            // printf("%0.3f const anim", const_anim_texture);
+            if (timer_control_texture <= const_anim_texture * 6)
+            {
+                timer_control_texture += const_anim_texture;
+            }
+            else
+            {
+                timer_control_texture = const_anim_texture;
+            }
+            timer = 0;
+        }
     }
 
     // printf("timer = %0.3f\n", timer);
@@ -259,7 +303,7 @@ void Shot::draw()
     //     glRotatef(90, 0, 0, 1);
     // }
 
-    if (this->id == 2 && cont_stage_tex == 0)
+    if ((this->id == 2 || this->creator_id == 3) && cont_stage_tex == 0)
         glRotatef(90, 0, 0, 1);
     else if (cont_stage_tex == 1)
         glRotatef(270, 0, 0, 1);

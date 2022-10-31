@@ -9,7 +9,7 @@ class Shot : public Entidade
 {
 private:
     int hp;
-    
+    int creator_id;
 public:
     Shot(vec3f_t origin, float angle, float velocidade, vec3f_t direction,std::vector<vec3f_t> model,std::vector<vec3f_t> hit_box,const char *texture_name,int const_stage_tex,int creator_id);
     Shot(vec3f_t origin, float angle, float velocidade,vec3f_t direction, int creator_id, const char *texture_name,int const_stage_tex);

@@ -6,11 +6,12 @@ void print(const char *text,
            float y,
            GLuint red,
            GLuint green,
-           GLuint blue)
+           GLuint blue,
+           GLuint alpha)
 {
 
     // Seleciona a cor e a posicao
-    glColor3ub(red, green, blue);
+    glColor4ub(red, green, blue,alpha);
     glRasterPos2f(x, y);
 
     // Printa a string

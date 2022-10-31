@@ -133,6 +133,10 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
                 {
                     shr_ptr = std::make_shared<Kamikaze>(str_aux, 0, 2.2f);
                 }
+                else if((*fase_script->begin()).id_enemy == 8)
+                {
+                    shr_ptr = std::make_shared<Kamikaze2>(str_aux, 0, 3.2f);
+                }
                 // Shooter
                 else if ((*fase_script->begin()).id_enemy == 3)
                 {
@@ -428,6 +432,8 @@ void World::drawFancyStuff()
         glVertex2f(aux.x + 20 + divs, aux.y + 30);
         glEnd();
 
+        print("[HP]",GLUT_BITMAP_TIMES_ROMAN_24,aux.x + 25,aux.y + 35,0,255,0,160);
+        
         // glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
     }

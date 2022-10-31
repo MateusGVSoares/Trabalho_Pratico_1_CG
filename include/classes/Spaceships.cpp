@@ -80,6 +80,22 @@ void Shooter::move(vec3f_t *point)
     this->origin.z += this->direction.z * velocidade;
 }
 
+Shot *Shooter::enemyFire()
+{
+    this->timer = 0.0;
+    vec3f_t dir = {
+        .x = 0,
+        .y = -1,
+        .z = 0};
+
+    // Ajusta o ponto de origem do tiro
+    vec3f_t shotOrigin = this->origin;
+
+    shotOrigin.y -= 12;
+
+    return new Shot(shotOrigin, 0, 3.5f, dir, 3, "assets/scripts/enemyShot.tscp", this->cont_stage_tex);
+}
+
 // _______________________________________________
 
 // __KAMIKAZE__
@@ -139,17 +155,17 @@ void Kamikaze::move(vec3f_t *point)
 
 // __RUNNNER__
 Kamikaze2::Kamikaze2(vec3f_t origin,
-                   float angle,
-                   float velocidade) : Enemy(origin, angle, velocidade)
+                     float angle,
+                     float velocidade) : Enemy(origin, angle, velocidade)
 {
     this->angle = 180;
-    this->texture = std::make_shared<Texturazer>("assets/scripts/Kamikaze.tscp");
+    this->texture = std::make_shared<Texturazer>("assets/scripts/Kamikaze2.tscp");
 
-    this->distance = 0;
+    this->distance_angle = 90;
 
     std::vector<vec3f_t> aux;
 
-    if (parse_model(&aux, "assets/scripts/Kamikaze.mscp"))
+    if (parse_model(&aux, "assets/scripts/Kamikaze2.mscp"))
     {
         printf("Deu ruim renderizando o modelo do inimigo KAMIKAZE \n");
     }
@@ -158,30 +174,28 @@ Kamikaze2::Kamikaze2(vec3f_t origin,
     this->hit_box = aux;
     this->box_model = aux;
     this->id = 4;
+    this->direction.y = -1;
 }
-void Kamikaze2::move(vec3f_t *point){
-    float distancia=150, ang=1.57;
-
-
-    if(origin.x<((point->x+distancia*cos(ang))-4) || origin.x>((point->x+distancia*cos(ang))+4) || 
-    origin.y<(point->y+distancia*sin(ang))-4 || origin.y>(point->y+distancia*sin(ang))+4 ){
-
-        if(origin.x<(point->x+distancia*cos(ang)))
-        origin.x+=1.5;
-        if(origin.x>(point->x+distancia*cos(ang)))
-        origin.x-=1.5;
-        if(origin.y<(point->y+distancia*sin(ang)))
-        origin.y+=1.5;
-        if(origin.y>(point->y+distancia*sin(ang)))
-        origin.y-=1.5;
-    }
-    else{
-        ang+=(M_PI/60);
-        if(ang>=2*M_PI)
-        ang=0;
+void Kamikaze2::move(vec3f_t *point)
+{
+    if ((!this->on_screen) && this->hit_box[0].y < 0)
+    {
+        this->alive = 0;
+        return;
     }
 
-    distancia-=0.1;
+    this->distance_angle += 4;
+
+    if (distance_angle >= 360)
+    {
+        this->distance_angle -= 360;
+    }
+
+    this->direction.x = cos(this->distance_angle * M_PI / 180.0f) * velocidade;
+
+    this->origin.x += direction.x;
+    this->origin.y += direction.y * velocidade;
+    this->origin.z += direction.z;
 }
 // _____________________________________-
 
@@ -241,7 +255,7 @@ PowerUp::PowerUp(vec3f_t origin,
     this->direction.y = -1;
     this->direction.z = 0;
     this->type = type;
-    
+
     this->texture = std::make_shared<Texturazer>("assets/scripts/powerUp.tscp");
 
     std::vector<vec3f_t> aux;
@@ -273,7 +287,7 @@ void PowerUp::move()
         this->distance_angle -= 360;
     }
 
-    this->direction.x = cos(this->distance_angle * M_PI / 180.0f) ;
+    this->direction.x = cos(this->distance_angle * M_PI / 180.0f);
 
     this->origin.x += direction.x;
     this->origin.y += direction.y * velocidade;
@@ -287,8 +301,8 @@ void PowerUp::draw()
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
 
-    if(this->type)
-        glColor3ub(255,0,0);
+    if (this->type)
+        glColor3ub(255, 0, 0);
     else
         glColor3ub(255, 255, 255);
 

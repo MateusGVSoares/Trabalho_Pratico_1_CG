@@ -30,6 +30,7 @@ public:
 
     void move() override;
     void move(vec3f_t *point) override;
+    Shot *enemyFire() override;
 };
 
 class Kamikaze : public Enemy
@@ -46,7 +47,7 @@ public:
 class Kamikaze2 : public Enemy
 {
 private:
-    float distance;
+    float distance_angle;
 
 public:
     using Enemy::Enemy;
@@ -68,9 +69,10 @@ class PowerUp : public Enemy
 private:
     float distance_angle;
     int type;
+
 public:
     using Enemy::Enemy;
-    PowerUp(vec3f_t origin, float angle, float velocidade,int type);
+    PowerUp(vec3f_t origin, float angle, float velocidade, int type);
     void move() override;
     void draw();
 
