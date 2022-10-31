@@ -84,19 +84,17 @@ void Player::draw()
     // glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
 
     // A é a textura 1
-    if (keyboard.a == 1 && keyboard.d == 0 || keyboard.left == 1 && keyboard.right == 0)
+
+    if(this->direction.x > 0)
     {
         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[2]);
     }
-    // D é a textura 2
-    else if (keyboard.d == 1 && keyboard.a == 0 || keyboard.right == 1 && keyboard.left == 0)
+    else if( this->direction.x < 0)
     {
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
+         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
     }
     else
-    {
         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
-    }
 
     glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < this->model.size(); i++)

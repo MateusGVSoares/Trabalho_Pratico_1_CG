@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "Boss.h"
 #include "Background.h"
+#include "Spaceships.h"
+#include "../Text.h"
 #include <vector>
 #include <list>
 #include <queue>

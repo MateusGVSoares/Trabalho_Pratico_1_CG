@@ -19,9 +19,11 @@ public:
     Enemy(vec3f_t origin,float angle, float velocidade,std::vector<vec3f_t> hit_box,std::vector<vec3f_t> model);
     
     Shot* enemyFire();
-
+    void calc_direction(vec3f_t * point);
+    
     // Virtual methods
-    void move() override;
+    virtual void move(vec3f_t * point);
+    virtual void move() override; 
     void draw() override;
     int destroy() override;
 };
