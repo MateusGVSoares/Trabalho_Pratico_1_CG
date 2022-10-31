@@ -12,30 +12,30 @@
 #include <SOIL/SOIL.h>
 #include "../parser.h"
 
-class Player : public Entidade 
+class Player : public Entidade
 {
-    private:
-        int hp ;
-        int vidas ;
-        int select_shot;
-        int level_gun1;
-        int level_gun2;
-        float timer_troca_gun;
-        int invecible;
-        float timer_invecible;
-        std::vector<vec3f_t> shot_model;
-        
-    public:
-        Player(vec3f_t origin,  float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model);
-        using Entidade::Entidade;
-        Shot* playerFire();
-        int updateOnKeyboard(keyboard_t keys);
-        void setLevelgun();
-        
-        // Virtual methods
-        void move() override;
-        void draw() override;
-        int destroy() override;
+private:
+    int vidas;
+    int select_shot;
+    int level_gun1;
+    int level_gun2;
+    float timer_troca_gun;
+    int invecible;
+    float timer_invecible;
+    std::vector<vec3f_t> shot_model;
+
+public:
+    int hp;
+    Player(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model);
+    using Entidade::Entidade;
+    Shot *playerFire();
+    int updateOnKeyboard(keyboard_t keys);
+    void treatUpgrade(int type);
+    int *getHp();
+    // Virtual methods
+    void move() override;
+    void draw() override;
+    int destroy() override;
 };
 
 #endif

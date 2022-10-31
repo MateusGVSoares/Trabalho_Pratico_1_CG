@@ -53,6 +53,7 @@ void drawUpdate()
         glEnable(GL_TEXTURE_2D);
         //joga->draw();
         mundo->draw_vec_entitys();
+        mundo->drawFancyStuff();
         glDisable(GL_TEXTURE_2D);
 
      }

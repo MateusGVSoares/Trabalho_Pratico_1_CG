@@ -17,9 +17,16 @@ Enemy::Enemy(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t>
     this->velocidade = velocidade;
 };
 
+void Enemy::move(vec3f_t *point)
+{
+    this->origin.x += this->direction.x * velocidade;
+    this->origin.y += this->direction.y * velocidade;
+    this->origin.z += this->direction.z * velocidade;
+}
+
 Shot *Enemy::enemyFire()
 {
-    this->timer=0.0;
+    this->timer = 0.0;
     vec3f_t dir = {
         .x = 0,
         .y = -1,
@@ -30,7 +37,7 @@ Shot *Enemy::enemyFire()
 
     shotOrigin.y -= 12;
 
-    return new Shot(this->origin,0, 3.0f, dir,this->id,"assets/scripts/player_shot.tscp",this->cont_stage_tex);
+    return new Shot(shotOrigin, 0, 1.0f, dir, this->id, "enemyShot.tscp", this->cont_stage_tex);
 }
 
 void Enemy::draw()
@@ -57,15 +64,21 @@ void Enemy::draw()
     glPopMatrix();
 };
 
+void Enemy::calc_direction(vec3f_t *point)
+{
+    // Calcula a direcao de movimento do inimgo
+    // Para esse caso de inimigo,
+    // faz com que se movimente do ponto inicial
+    // ate o final
+    this->direction.x = point->x - this->origin.x;
+    this->direction.y = point->y - this->origin.y;
+    this->direction.z = point->z - this->origin.z;
+}
 void Enemy::move()
 {
-        vec3f_t dir = {
-        .x = 0,
-        .y = -1,
-        .z = 0};
-    this->origin.x += dir.x;
-    this->origin.y += dir.y;
-    this->origin.z += dir.z;
+    this->origin.x += this->direction.x * velocidade;
+    this->origin.y += this->direction.y * velocidade;
+    this->origin.z += this->direction.z * velocidade;
 }
 
 int Enemy::destroy()

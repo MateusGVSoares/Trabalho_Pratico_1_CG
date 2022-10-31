@@ -20,10 +20,10 @@ private:
     float count_especial;
 
 public:
-    Boss(vec3f_t origin,float angle, float velocidade,std::vector<vec3f_t> hit_box,std::vector<vec3f_t> model);
     using Enemy::Enemy;
-    Shot* enemyFire();
-    void move() override;
+    Boss(vec3f_t origin,float angle, float velocidade,std::vector<vec3f_t> hit_box,std::vector<vec3f_t> model);
+    Shot* enemyFire() override;
+    void move(vec3f_t * point) override;
     void draw() override;
     int destroy() override;
 };

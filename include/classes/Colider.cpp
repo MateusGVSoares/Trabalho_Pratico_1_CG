@@ -100,9 +100,9 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                         detect_col.insert(z);
                         
                             if(vec_entitys[x]->getId() ==16)
-                                ((Player *)(vec_entitys.at(z)).get())->setLevelgun();
-                            if(vec_entitys[z]->getId() ==16)
-                                ((Player *)(vec_entitys.at(x)).get())->setLevelgun();
+                                ((Player *)(vec_entitys.at(z)).get())->treatUpgrade( ((PowerUp *)(vec_entitys.at(x)).get())->getType());
+                            else if(vec_entitys[z]->getId() ==16)
+                                ((Player *)(vec_entitys.at(x)).get())->treatUpgrade(((PowerUp *)(vec_entitys.at(z)).get())->getType());
                    // flag=1;
                     }
                 break;
