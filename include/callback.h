@@ -23,7 +23,7 @@ extern keyboard_t keyboard;
 // Aspect Ratio
 // MAX_X
 // MAX_Y
-extern float razaoAspecto, max_x, max_y;
+extern float razaoAspecto, prev_wh, prev_ww, max_x, max_y;
 
 void keyboardFct(unsigned char key, int x, int y);
 void reshapeFct(int width, int height);

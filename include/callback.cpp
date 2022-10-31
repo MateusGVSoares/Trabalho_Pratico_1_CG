@@ -1,7 +1,7 @@
 #include "callback.h"
 #include <iostream>
 
-float razaoAspecto = 0;
+float razaoAspecto = 16.0f / 9.0f, prev_wh, prev_ww;
 float max_x = 0, max_y = 0;
 
 keyboard_t keyboard = {0};
@@ -66,9 +66,7 @@ void keyboardFct(unsigned char key, int x, int y)
             keyboard.x = 1;
         break;
     }
-
-    }
-
+}
 
 // Callback para pressionamento de Teclas Especiais
 void keyboardSpecial(int key, int x, int y)
@@ -106,15 +104,40 @@ void keyboardSpecial(int key, int x, int y)
     }
 }
 
+static bool reshaping = 0;
+
 // Callback para redimensionamento
 void reshapeFct(int width, int height)
 {
-#ifdef DEBUG
+// #ifdef DEBUG
     printf("Reshape Callback [%s] : Width [%d] | Height [%d] \n", __func__, width, height);
-#endif
+// #endif
 
+    if (width != prev_ww)
+    {
+        prev_ww = width;
+        if (((float)width / (float)height) != razaoAspecto && !reshaping)
+        {
+            reshaping = 1;
+            glutReshapeWindow(width, width * (1/razaoAspecto));
+        }
+        else
+            reshaping = 0;
+    }
+    else if (height != prev_wh)
+    {
+        prev_wh = height;
+        if (((float)width / (float)height) != razaoAspecto && !reshaping)
+        {
+            reshaping = 1;
+            glutReshapeWindow(height * razaoAspecto, height);
+        }
+        else
+            reshaping = 0;
+    }
     // Redimensiona o desenho do open_gl
-    razaoAspecto = (float)glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT);
+    // razaoAspecto = (float)glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT);
+
     glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);

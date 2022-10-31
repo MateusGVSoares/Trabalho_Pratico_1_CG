@@ -432,7 +432,7 @@ void World::drawFancyStuff()
         glVertex2f(aux.x + 20 + divs, aux.y + 30);
         glEnd();
 
-        print("[HP]",GLUT_BITMAP_TIMES_ROMAN_24,aux.x + 25,aux.y + 35,0,255,0,160);
+        print("[HP]",GLUT_BITMAP_TIMES_ROMAN_24,aux.x + 20,aux.y + 45,0,255,0,160);
         
         // glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);

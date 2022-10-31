@@ -17,35 +17,34 @@
 #include "include/classes/Colider.h"
 #include "include/classes/Menu.h"
 
-
 // VAMOS MEU CAMISA 09 >_< (Updated by Mateus on 16/08, 11:00:01)
 std::vector<std::shared_ptr<Shot>> entities;
 World *mundo;
 Menu *menu;
-//TODO 
-//botar a IA do movimento dos inimigos
-//terminar roteiro dos inimigos
-// botar interface de vida e hp do player
-//player 2 hp, 2vida
-//tela de gamer over começa do começo
-//so quando completar isso partir para os pontos extras
+// TODO
+// botar a IA do movimento dos inimigos
+// terminar roteiro dos inimigos
+//  botar interface de vida e hp do player
+// player 2 hp, 2vida
+// tela de gamer over começa do começo
+// so quando completar isso partir para os pontos extras
 
 // variaveis globais
 float timer_count = 0;
 float world_time = 0;
 int confirm = 0;
 // YES, this cause a memory leak!
- void startMenu()
- {
-     menu = new Menu();
-     menu->inicializa();
- }
+void startMenu()
+{
+    menu = new Menu();
+    menu->inicializa();
+}
 
- void startMundo()
- {
-     mundo = new World();
-     mundo->initialize_script_mission();
- }
+void startMundo()
+{
+    mundo = new World();
+    mundo->initialize_script_mission();
+}
 
 void drawUpdate()
 {
@@ -55,20 +54,19 @@ void drawUpdate()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // mostra o menu
-    if(menu->flagpermission !=1 ){
-          menu->draw();
-        }
-     //inicia o jogo
-     if(menu->flagpermission == 1){
-     //if (joga->getOnScreen())
-     //{
+    if (menu->flagpermission != 1)
+    {
+        menu->draw();
+    }
+    // inicia o jogo
+    if (menu->flagpermission == 1)
+    {
+
         glEnable(GL_TEXTURE_2D);
-        //joga->draw();
         mundo->draw_vec_entitys();
         mundo->drawFancyStuff();
         glDisable(GL_TEXTURE_2D);
-
-     }
+    }
 
     glutSwapBuffers();
 }
@@ -78,34 +76,37 @@ void onTimeUpdate(int time)
     // tempo globais para auxiliar a classe World
     timer_count += (float)time / 1000;
     world_time += (float)time / 1000;
-     if ((menu->flagpermission == 0 || menu->flagpermission == 2 || menu->flagpermission==3) && world_time >= 0.125)
-     {
-         menu->comum_key_pressed(keyboard);
-         menu->key_pressed(keyboard);
-         world_time = 0;
-     }
+    if ((menu->flagpermission == 0 || menu->flagpermission == 2 || menu->flagpermission == 3) && world_time >= 0.125)
+    {
+        menu->comum_key_pressed(keyboard);
+        menu->key_pressed(keyboard);
+        world_time = 0;
+    }
 
-     if (menu->flagpermission == 1)
-     {
-        //printf("time = %0.2f \n",world_time);
+    if (menu->flagpermission == 1)
+    {
+        // printf("time = %0.2f \n",world_time);
         mundo->start_mission(&world_time);
-        if(mundo->mission_reset()){
+        if (mundo->mission_reset())
+        {
             startMenu();
             startMundo();
         }
-        else{
+        else
+        {
             mundo->update_entitys(&timer_count);
         }
-     }
+    }
 
-     if (menu->flagpermission == 2)
-     {
-         // roda os creditos
-         menu->show_Creditos();
-     }
-     if(menu->flagpermission ==3){
+    if (menu->flagpermission == 2)
+    {
+        // roda os creditos
+        menu->show_Creditos();
+    }
+    if (menu->flagpermission == 3)
+    {
         menu->show_Instrucoes();
-     }
+    }
 
     // Draws everything <3
     glutPostRedisplay();
@@ -118,7 +119,8 @@ void configGlut()
 {
     // Configura a janela da GLUT
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(600, 600 * 1/razaoAspecto);
+
     glutInitWindowPosition(0, 0);
     glutCreateWindow("Game");
 
@@ -134,6 +136,9 @@ void configGlut()
 
     glLineWidth(8);
     glClearColor(1, 1, 1, 1);
+
+    prev_wh = 600 * razaoAspecto;
+    prev_ww = 600;
 
     // Ignora repetições de teclas e verifica apenas o pressionamento e qnd soltar
     glutIgnoreKeyRepeat(1);

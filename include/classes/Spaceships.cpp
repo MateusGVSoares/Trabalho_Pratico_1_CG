@@ -66,14 +66,22 @@ void Shooter::move(vec3f_t *point)
         }
     }
     else
-    {
-        if (this->origin.x > max_x)
+    {   
+        if(this->direction.y)
         {
-            this->direction.x = -1;
+            this->direction.y = 0;
         }
-        else if (this->origin.x < -max_x)
-            this->direction.x = 1;
+        if(!this->on_screen)
+        {
+            this->alive = 0;
+            return;
+        }
+        if (this->border_x_col)
+        {
+            this->direction.x *= -1;
+        }
     }
+
 
     this->origin.x += this->direction.x * velocidade;
     this->origin.y += this->direction.y * velocidade;
