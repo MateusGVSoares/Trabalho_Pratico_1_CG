@@ -16,6 +16,8 @@
 class World{
 
 private:
+    int troca=0;
+
     std::queue<std::list<mission_wave>> stack_mission; 
     //usar smartpointer
     std::vector<std::shared_ptr<Entidade>> vec_entitys;

@@ -100,9 +100,9 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
                         detect_col.insert(z);
                         
                             if(vec_entitys[x]->getId() ==16)
-                                vec_entitys[z]->setConst();
+                                ((Player *)(vec_entitys.at(z)).get())->setLevelgun();
                             if(vec_entitys[z]->getId() ==16)
-                                vec_entitys[x]->setConst();
+                                ((Player *)(vec_entitys.at(x)).get())->setLevelgun();
                    // flag=1;
                     }
                 break;

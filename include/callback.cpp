@@ -57,8 +57,18 @@ void keyboardFct(unsigned char key, int x, int y)
         else
             keyboard.space = 1;
         break;
+
+    case 'x':
+    case 'X':
+        if (keyboard.x)
+            keyboard.x = 0;
+        else
+            keyboard.x = 1;
+        break;
     }
-}
+
+    }
+
 
 // Callback para pressionamento de Teclas Especiais
 void keyboardSpecial(int key, int x, int y)

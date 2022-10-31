@@ -17,8 +17,14 @@ Player::Player(vec3f_t origin,
     this->vidas = 2;
     this->cont_stage_tex=0;
     this->velocidade =3;
+    this->invecible=0;
+    this->timer_invecible=0.0;
     // ID para colisao(não é o id de carregamento das coisas do script)
     this->id = 1;
+    this->select_shot=1;
+    this->level_gun1=1;
+    this->level_gun2=1;
+    this->timer_troca_gun=0.0;
 };
 
 int Player::updateOnKeyboard(keyboard_t keys)
@@ -58,11 +64,50 @@ int Player::updateOnKeyboard(keyboard_t keys)
     }
 
     this->direction.z = 0;
+
+    if(this->timer_troca_gun>0.5){
+
+        if(keys.x == 1){
+            this->select_shot *=-1;
+            //printf("entrou aqui \n");
+             this->timer_troca_gun=0.0;
+        }
+
+    }
+
+    if(this->origin.x > (256-this->model[0].x)*razaoAspecto)
+        this->origin.x-=this->velocidade;
+
+    if(this->origin.x < -(256-this->model[0].x)*razaoAspecto)
+        this->origin.x+=this->velocidade;
+
+    if(this->origin.y > (224-this->model[0].y))
+        this->origin.y-=this->velocidade;
+    
+    if(this->origin.y < -(224-this->model[0].y))
+        this->origin.y+=this->velocidade;
+
+
+
     return keys.space;
 }
 
 void Player::move()
 {
+    if(this->select_shot ==1)
+        this->timer+=(9.0/1000.0*level_gun1);
+
+    else
+        this->timer+=(11.0/1000.0);
+
+    this->timer_troca_gun+=16.0/1000.0;
+    this->timer_invecible+=16.0/1000.0;
+
+    if(invecible==1 && timer_invecible>1.5){
+        invecible=0;
+    }
+        
+
     updateOnKeyboard(keyboard);
     // Movimenta o player usando o vetor unitário de direção
     this->origin.x += this->direction.x * velocidade;
@@ -70,6 +115,32 @@ void Player::move()
     this->origin.z += this->direction.z * velocidade;
 
     // printf("Player [Velocity : %0.2f, Vec : %0.2f %0.2f %0.2f] || x->%0.2f y->%0.2f \n", this->velocidade, this->origin.x, this->origin.y, this->origin.z,max_x,max_y);
+}
+
+void Player::setLevelgun(){
+    
+
+    if(this->select_shot==1 && this->level_gun1<3){
+        printf("entrou 1\n");
+        this->level_gun1++;
+        }
+
+    if(this->select_shot==-1 && this->level_gun2<3){
+        printf("entrou 2\n");
+        this->level_gun2++;
+        }
+
+    if(this->select_shot==1 && this->level_gun1==3 && this->level_gun2<3){
+        printf("entrou 3\n");
+        this->level_gun2++;
+        }
+
+    if(this->select_shot==-1 && this->level_gun2==3 && this->level_gun1<3){
+        printf("entrou 4\n");
+        this->level_gun1++;
+        }
+
+
 }
 
 void Player::draw()
@@ -86,12 +157,12 @@ void Player::draw()
     // A é a textura 1
     if (keyboard.a == 1 && keyboard.d == 0 || keyboard.left == 1 && keyboard.right == 0)
     {
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[2]);
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
     }
     // D é a textura 2
     else if (keyboard.d == 1 && keyboard.a == 0 || keyboard.right == 1 && keyboard.left == 0)
     {
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[2]);
     }
     else
     {
@@ -106,6 +177,20 @@ void Player::draw()
         glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
     }
     glEnd();
+    if(invecible==1){
+        glColor3ub(10, 10, 255);
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[3]);
+
+        glBegin(GL_TRIANGLE_FAN);
+            for (int i = 0; i < this->model.size(); i++)
+            {
+                // Associa a textura ao objeto desenhado
+                glTexCoord2f(this->texture->texture_cords[0][i].x, this->texture->texture_cords[0][i].y);
+                glVertex3f(this->model[i].x, this->model[i].y, this->model[i].z);
+            }
+        glEnd();
+
+        }
 
     glPopMatrix();
 
@@ -125,6 +210,7 @@ void Player::draw()
 
 Shot *Player::playerFire()
 {
+    this->timer=0.0;
     vec3f_t dir = {
         .x = 0,
         .y = 1,
@@ -135,29 +221,36 @@ Shot *Player::playerFire()
 
     // Passa os dados para serem criado o tiro para ser tratado no colider
     // Tiro com id=2 --> tiro do player
-    return new Shot(shot_origin, 90.0f, 2.0f, dir,this->id,"assets/scripts/player_shot.tscp",this->cont_stage_tex);
+    if(select_shot==1)
+        return new Shot(shot_origin, 90.0f, 5.0f, dir,this->id,"assets/scripts/player_shot.tscp",0,this->level_gun1);
+    else
+        return new Shot(shot_origin, 0.0f, 2.7f, dir,this->id,"assets/scripts/player_shot.tscp",1,this->level_gun2);
+
 }
 
 int Player::destroy()
 {
 
     // printf("hp = %d , vidas= %d \n",this->hp,this->vidas);
-
-    if (hp > 0)
+    if(invecible ==0)
     {
-        hp--;
-    }
+        invecible=1;
+        timer_invecible=0.0;
+        if (hp > 0)
+        {
+            hp--;
+        }
 
-    if (vidas > 0 && hp == 0)
-    {
-        hp = 2;
-        vidas--;
-    }
+        if (vidas > 0 && hp == 0)
+        {
+            hp = 2;
+            vidas--;
+        }
 
-    if (vidas == 0 && hp == 0)
-    {
-        return 1;
+        if (vidas == 0 && hp == 0)
+        {
+            return 1;
+        }
     }
-
     return 0;
 }

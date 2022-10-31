@@ -17,6 +17,12 @@ class Player : public Entidade
     private:
         int hp ;
         int vidas ;
+        int select_shot;
+        int level_gun1;
+        int level_gun2;
+        float timer_troca_gun;
+        int invecible;
+        float timer_invecible;
         std::vector<vec3f_t> shot_model;
         
     public:
@@ -24,6 +30,7 @@ class Player : public Entidade
         using Entidade::Entidade;
         Shot* playerFire();
         int updateOnKeyboard(keyboard_t keys);
+        void setLevelgun();
         
         // Virtual methods
         void move() override;

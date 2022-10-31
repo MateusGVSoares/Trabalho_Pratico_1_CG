@@ -30,7 +30,7 @@ Shot *Enemy::enemyFire()
 
     shotOrigin.y -= 12;
 
-    return new Shot(shotOrigin, 0, 1.0f, dir, this->model, this->hit_box, "enemyShot.tscp",this->cont_stage_tex);
+    return new Shot(this->origin,0, 3.0f, dir,this->id,"assets/scripts/player_shot.tscp",this->cont_stage_tex);
 }
 
 void Enemy::draw()
@@ -59,9 +59,13 @@ void Enemy::draw()
 
 void Enemy::move()
 {
-    this->origin.x += this->direction.x;
-    this->origin.y += this->direction.y;
-    this->origin.z += this->direction.z;
+        vec3f_t dir = {
+        .x = 0,
+        .y = -1,
+        .z = 0};
+    this->origin.x += dir.x;
+    this->origin.y += dir.y;
+    this->origin.z += dir.z;
 }
 
 int Enemy::destroy()

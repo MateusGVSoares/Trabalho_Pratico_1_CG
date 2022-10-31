@@ -35,16 +35,17 @@ void World::start_mission(float *time)
     // TODO logica de spawnar inimigos e controle de tempo
     // criar metodo que faz o controle da missao e chamar aqui
 
+
     if (!stack_mission.empty())
         mission_handler(&stack_mission.front(), time);
 
-    if (*time > 7.0 && !stack_mission.empty())
+    if (*time > 7 && !stack_mission.empty() && troca<1)
     {
+        troca++;
         *time = 0;
         stack_mission.pop();
         // troca a textura do background
-        // background.reset();
-        // background->setTexture(std::make_shared<Texturazer>("assets/scripts/background2.tscp"));
+        background->trocar_back();
         printf("entrou 2 roteiro, time =%0.2f\n", *time);
     }
 }
@@ -68,7 +69,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
             //  e seu id corresponde a um modelo que vai ser criado usando o metodo
             // create_models que retornara um vec de struct com seus pontos
             // para depois inicializar os modelos e bota no vec entidade
-            if ((*fase_script->begin()).id_enemy >= 0 && (*fase_script->begin()).id_enemy < 4)
+            if ((*fase_script->begin()).id_enemy > 0 && (*fase_script->begin()).id_enemy < 4)
             {
                 // usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
                 str_aux.x = (*fase_script->begin()).x;
@@ -88,7 +89,7 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
             // id =4 ou 5 caso especial dos chefoes
             if ((*fase_script->begin()).id_enemy == 4 || (*fase_script->begin()).id_enemy == 5)
             {
-
+                background->start_boss();
                 // usa Classe do chefao para criar
                 // a create models pode ser usada ainda , pois ela so devolve o vector
                 // de pontos para ser usado do modelo apenas
@@ -208,7 +209,7 @@ void World::draw_vec_entitys()
     for (int x = 0; x < vec_entitys.size(); x++)
     {
 
-        if (vec_entitys.at(x)->getOnScreen())
+        if ( vec_entitys.at(x)->alive )//e adicionar outra condição
         {
             to_colider.push_back(vec_entitys.at(x));
         }
@@ -254,9 +255,8 @@ void World::update_entitys(float *timer_count)
     if (joga != nullptr)
         shot = joga->updateOnKeyboard(keyboard);
 
-    if (shot && *timer_count > 0.3)
+    if (shot && joga->getTimer() > 0.3)
     {
-        *timer_count = 0;
         vec_entitys.push_back(std::shared_ptr<Shot>(joga->playerFire()));
     }
     int consta = vec_entitys.size();
@@ -278,6 +278,8 @@ void World::update_entitys(float *timer_count)
         vec_entitys.at(i)->move();
         vec_entitys.at(i)->updateModel();
     }
+
+
 
     // Reutilizando funcao - Adjailson >_<
     background->destroy();

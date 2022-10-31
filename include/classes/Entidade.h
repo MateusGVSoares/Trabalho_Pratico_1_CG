@@ -24,12 +24,12 @@ typedef struct vec3f
 // Definição da classe Entidade
 class Entidade
 {
+
 protected:
     float angle;
     bool on_screen;
     float velocidade;
     int id;
-    int alive;
     float timer;
     float timer_control_texture;
     float const_anim_texture;
@@ -43,6 +43,7 @@ protected:
 
 
 public:
+    int alive;
     Entidade(vec3f_t origin, float angle,float velocidade);
     void updateModel();
 

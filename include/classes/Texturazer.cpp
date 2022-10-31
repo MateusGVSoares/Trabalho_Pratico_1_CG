@@ -15,7 +15,7 @@ int Texturazer::parse_script(const char *file_name)
     vec3f_t aux = {0};
     std::vector<vec3f_t> aux_cords;
 
-    char *input_str = (char *)malloc(sizeof(char) * 31);
+    char *input_str = (char *)malloc(sizeof(char) * 50);
 
     int n_coordenadas,
         n_texturas;
@@ -81,7 +81,7 @@ int Texturazer::parse_script(const char *file_name)
 
         // Obtem o nome do arquivo de textura
         file->getline(input_str, 100);
-        printf("nome = %s\n", input_str);
+        //printf("nome = %s\n", input_str);
         std::string input_caminho("assets/texture/");
         input_caminho.append(input_str);
 

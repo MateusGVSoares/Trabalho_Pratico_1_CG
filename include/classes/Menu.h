@@ -9,8 +9,11 @@
 
 class Menu{
     private:
-    GLuint idTextures[3];
+    GLuint idTextures[4];
     GLuint idCurrentTexture;
+    GLuint idCreditos;
+    GLuint idInstrucoes;
+    int i;
     
     public:
     int flagpermission;
@@ -20,6 +23,8 @@ class Menu{
     void key_pressed(keyboard_t keys);
     void comum_key_pressed(keyboard_t keys);
     void inicializa();
+    void show_Creditos();
+    void show_Instrucoes();
     ~Menu(){}; //destrutor
 };
 #endif
