@@ -15,6 +15,7 @@ Enemy::Enemy(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t>
     this->id = 4;
     // Inicializa a velocidade
     this->velocidade = velocidade;
+    this->timer =0;
 };
 
 void Enemy::move(vec3f_t *point)
@@ -37,7 +38,7 @@ Shot *Enemy::enemyFire()
 
     shotOrigin.y -= 12;
 
-    return new Shot(shotOrigin, 0, 1.0f, dir, this->id, "enemyShot.tscp", this->cont_stage_tex);
+    return new Shot(shotOrigin, 0, 1.0f, dir, this->id, "assets/scripts/enemyShot.tscp", this->cont_stage_tex);
 }
 
 void Enemy::draw()
@@ -76,6 +77,7 @@ void Enemy::calc_direction(vec3f_t *point)
 }
 void Enemy::move()
 {
+    this->timer+=16.0/1000.0;
     this->origin.x += this->direction.x * velocidade;
     this->origin.y += this->direction.y * velocidade;
     this->origin.z += this->direction.z * velocidade;

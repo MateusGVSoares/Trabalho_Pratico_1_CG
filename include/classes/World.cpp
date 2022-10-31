@@ -11,9 +11,11 @@ void World::initialize_script_mission()
     aux.clear();
 
     // missao 2
+    /*
     parse_mission(&aux, "assets/scripts/roteiro2");
     this->stack_mission.push(aux);
     aux.clear();
+    */
     /*
     //missao 3
     parse_mission(&aux,"roteiro1");
@@ -32,13 +34,10 @@ void World::start_mission(float *time)
 
     // criamos um vetor auxiliar para retirar os vetores(vetor=o roteiro de uma fase) que estao na queue
 
-    // TODO logica de spawnar inimigos e controle de tempo
-    // criar metodo que faz o controle da missao e chamar aqui
-
-    if (!stack_mission.empty())
+    if (!stack_mission.empty() )
         mission_handler(&stack_mission.front(), time);
 
-    if (*time > 7 && !stack_mission.empty() && troca < 1)
+    if (*time > 90.0 && !stack_mission.empty() && troca < 1)
     {
         troca++;
         *time = 0;
@@ -62,8 +61,9 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
         if ((*fase_script->begin()).time <= *time)
         {
-            if ((*fase_script->begin()).id_enemy == 4 || (*fase_script->begin()).id_enemy == 5)
+            if ((*fase_script->begin()).id_enemy == 4 )
             {
+                printf("criando boss \n");
                 str_aux.x = (*fase_script->begin()).x;
                 str_aux.y = (*fase_script->begin()).y;
                 str_aux.z = 0;
@@ -77,7 +77,8 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
                                                   create_models((*fase_script->begin()).id_enemy));
 
                 send_texture((*fase_script->begin()).id_enemy, shr_boss);
-
+                actual_boss=shr_boss;
+                //background->start_boss();
                 vec_entitys.push_back(shr_boss);
             }
 
@@ -208,7 +209,7 @@ void World::draw_vec_entitys()
     for (int x = 0; x < vec_entitys.size(); x++)
     {
 
-        if (vec_entitys.at(x)->alive) // e adicionar outra condição
+        if (vec_entitys.at(x)->alive) 
         {
             to_colider.push_back(vec_entitys.at(x));
         }
@@ -264,7 +265,13 @@ void World::update_entitys(float *timer_count)
     {
 
         // printf(" id =%d , timer =%0.2f \n",vec_entitys.at(i)->getId(),vec_entitys.at(i)->getTimer());
+        //logica tiro boss
         if (vec_entitys.at(i)->getId() == 4 && vec_entitys.at(i)->getTimer() > 1.0)
+        {
+            vec_entitys.push_back(std::shared_ptr<Shot>(((Enemy *)(vec_entitys.at(i).get()))->enemyFire()));
+            // printf("entrou %d z\n",vec_entitys.at(i)->getId());
+        }
+        if (vec_entitys.at(i)->getId() ==3 && vec_entitys.at(i)->getTimer() > 0.8)
         {
             vec_entitys.push_back(std::shared_ptr<Shot>(((Enemy *)(vec_entitys.at(i).get()))->enemyFire()));
             // printf("entrou %d z\n",vec_entitys.at(i)->getId());
@@ -378,7 +385,7 @@ void World::drawFancyStuff()
         // printf("Hp do player : %d \n",actual_player->getHp());
         divs += 45 * actual_player->hp/10.0f;
 
-        glColor4ub(255,0,0,160);
+        glColor4ub(0,255,0,160);
         glBegin(GL_TRIANGLE_FAN);
         glVertex2f(aux.x + 20, aux.y + 30);
         glVertex2f(aux.x + 20, aux.y + 20);
@@ -390,9 +397,46 @@ void World::drawFancyStuff()
         // glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
     }
-
+    aux = {0};
     // Desenha a vida do boss
-    // if
+    if (this->actual_boss != nullptr)
+    {
+        aux.x = +max_x;
+        aux.y = -max_y;
+
+        glDisable(GL_TEXTURE_2D);
+        // glDisable(GL_BLEND);
+        // Cor do Menu 130, 196, 209
+        glColor4ub(130, 196, 209,160);
+        glBegin(GL_TRIANGLE_FAN);
+
+        glVertex2f(aux.x - 15, aux.y + 35);
+        glVertex2f(aux.x - 15, aux.y + 15);
+
+        glVertex2f(aux.x - 70, aux.y + 15);
+        glVertex2f(aux.x - 70, aux.y + 35);
+
+        glEnd();
+
+        divs = 0;
+
+        // Divide pelo numero de vidas maxima do player
+        // HARDCODED LLLL
+        // printf("Hp do player : %d \n",actual_player->getHp());
+        divs += 45 * (float)this->actual_boss->getHp() /110.0f;
+
+        glColor4ub(255,0,0,160);
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(aux.x -20, aux.y + 30);
+        glVertex2f(aux.x -20, aux.y + 20);
+
+        glVertex2f(aux.x  -20 - divs, aux.y + 20);
+        glVertex2f(aux.x  -20 - divs, aux.y + 30);
+        glEnd();
+
+        // glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+    }
 }
 
 void World::Credits()

@@ -100,13 +100,13 @@ int Player::updateOnKeyboard(keyboard_t keys)
 void Player::move()
 {
     if (this->select_shot == 1)
-        this->timer += (9.0 / 1000.0 * level_gun1);
+        this->timer += (10.0 / 1000.0 * level_gun1);
 
     else
-        this->timer += (11.0 / 1000.0);
+        this->timer += (8.0 / 1000.0);
 
     this->timer_troca_gun += 16.0 / 1000.0;
-    this->timer_invecible += 16.0 / 1000.0;
+    this->timer_invecible += 21.0 / 1000.0;
 
     if (invecible == 1 && timer_invecible > 1.5)
     {
@@ -127,44 +127,48 @@ void Player::treatUpgrade(int type)
     // Verifica se e upgrade ou vida :_:
     if (type == 0)
     {
-        printf("Ta ficando monstro >_< \n");
+        //printf("Ta ficando monstro >_< \n");
         if (this->select_shot == 1 && this->level_gun1 < 3)
         {
-            printf("entrou 1\n");
+            //printf("entrou 1\n");
             this->level_gun1++;
         }
 
         else if (this->select_shot == -1 && this->level_gun2 < 3)
         {
-            printf("entrou 2\n");
+            //printf("entrou 2\n");
             this->level_gun2++;
         }
 
         else if (this->select_shot == 1 && this->level_gun1 == 3 && this->level_gun2 < 3)
         {
-            printf("entrou 3\n");
+            //printf("entrou 3\n");
             this->level_gun2++;
         }
 
         else if (this->select_shot == -1 && this->level_gun2 == 3 && this->level_gun1 < 3)
         {
-            printf("entrou 4\n");
+            //printf("entrou 4\n");
             this->level_gun1++;
         }
         else
         {
             // Se n fizer nada com o up, restaura hp
-            if (this->hp < 10)
+            if (this->hp >8 && hp<11)
                 this->hp += 1;
+            else
+                this->hp+=2;
         }
     }
     else
     {
-        printf("Pegou vidinha >_< \n");
+        //printf("Pegou vidinha >_< \n");
         // Restaura 2 de hp
-        if (this->hp < 10)
+        if (this->hp >8 && hp<11)
             this->hp += 1;
-        printf("Hp do player : %d \n", this->hp);
+        else
+            this->hp+=2;
+        //printf("Hp do player : %d \n", this->hp);
     }
 }
 

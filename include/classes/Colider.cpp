@@ -54,9 +54,9 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
     //vetor para alocar o q vai pro try_colisor ou so guardar em idle
     std::vector<std::shared_ptr<Entidade>> to_handle,idle;
     std::set<int> detect_col,no_col;
-    int flag=0;
+
     for(int x=0;x< vec_entitys.size();x++){
-        flag=0;
+
         for(int z=x+1;z<vec_entitys.size();z++){
 
             switch (vec_entitys[x]->getId() + vec_entitys[z]->getId())
@@ -65,51 +65,52 @@ std::vector<std::shared_ptr<Entidade>> Colider::check_colison(std::vector<std::s
             // colisao player com inimigo
             case 5:
                 if(try_colison(vec_entitys.at(x)->getOrigin(),vec_entitys.at(x)->getHitbox(),vec_entitys.at(z)->getHitbox() ) ){
-                    printf("colisao 5 de %d com %d \n",x,z);
+                    //printf("colisao 5 de %d com %d \n",x,z);
                     detect_col.insert(x);
                     detect_col.insert(z);
-                   // flag=1;
+
                     }
                 break;
 
             // colisao do tiro do player com inimigo
             case 6:
                 if(try_colison(vec_entitys.at(x)->getOrigin(),vec_entitys.at(x)->getHitbox(),vec_entitys.at(z)->getHitbox() ) ){
-                    printf("colisao 6 de %d com %d \n",x,z);
+                    //printf("colisao 6 de %d com %d \n",x,z);
                     detect_col.insert(x);
                     detect_col.insert(z);
-                    //flag=1;
+
                     }
                 break;
 
             //  player com tiro do inimigo
             case 9:
                 if(try_colison(vec_entitys.at(x)->getOrigin(),vec_entitys.at(x)->getHitbox(),vec_entitys.at(z)->getHitbox() ) ){
-                    printf("colisao 9 de %d com %d \n",x,z);
+                    //printf("colisao 9 de %d com %d \n",x,z);
                     detect_col.insert(x);
                     detect_col.insert(z);
-                   // flag=1;
+
                     }
                 break;
 
             case 17:
             // colisao do player com powerup pois a soma sempre será igual a 17
                 if(try_colison(vec_entitys.at(x)->getOrigin(),vec_entitys.at(x)->getHitbox(),vec_entitys.at(z)->getHitbox() ) ){
-                    printf("colisao 17 de %d com %d \n",x,z);
-                        detect_col.insert(x);
-                        detect_col.insert(z);
+                   // printf("colisao 17 de %d com %d \n",x,z);
                         
-                            if(vec_entitys[x]->getId() ==16)
+                            if(vec_entitys[x]->getId() ==16){
                                 ((Player *)(vec_entitys.at(z)).get())->treatUpgrade( ((PowerUp *)(vec_entitys.at(x)).get())->getType());
-                            else if(vec_entitys[z]->getId() ==16)
+                                detect_col.insert(x);
+                            }
+                            else if(vec_entitys[z]->getId() ==16){
                                 ((Player *)(vec_entitys.at(x)).get())->treatUpgrade(((PowerUp *)(vec_entitys.at(z)).get())->getType());
-                   // flag=1;
+                                detect_col.insert(z);
+                            }
+
                     }
                 break;
 
             }
-            if(flag==1)
-                break;
+
 
         }
 

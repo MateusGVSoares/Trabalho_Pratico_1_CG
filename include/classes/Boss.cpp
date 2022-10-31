@@ -33,6 +33,12 @@ Boss::Boss(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t> h
     // this->texture = std::make_shared<Texturazer>("assets/scripts/Boss.tscp");
 };
 
+int Boss::getHp()
+{
+    return this->hp;
+}
+
+
 Shot *Boss::enemyFire()
 {
 
@@ -76,9 +82,15 @@ void Boss::move(vec3f_t *point)
 {
 
     // printf("Ta na tela -> %d \n", this->on_screen);
+    if(this->hp >36){
     this->timer += 16.0 / 1000.0;
-
     this->count_especial += 16.0 / 1000.0;
+    }
+    else{
+        this->velocidade=3;
+    this->timer += 48.0 / 1000.0;
+    this->count_especial += 32.0 / 1000.0;
+    }
 
     if (this->border_x_col)
     {
@@ -129,14 +141,16 @@ void Boss::draw()
 
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(180, 0, 0, 1);
-    
-    glColor3ub(255, 255, 255);
 
-    // Carrega o objeto de textura para manipular no OpenGL
-    if (this->hp > 55)
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
+    if(this->hp>36)
+        glColor3ub(255, 255, 255);
     else
-        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);
+        glColor3ub(255, 0, 0);
+    // Carrega o objeto de textura para manipular no OpenGL
+    if (this->hp > 73)
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
+    else 
+        glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[1]);    
 
     glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < this->model.size(); i++)
@@ -149,7 +163,10 @@ void Boss::draw()
 
     if (invecible == 1)
     {
-        glColor3ub(255, 10, 10);
+        if(this->hp>36)
+            glColor3ub(255, 10, 10);
+        else
+            glColor3ub(255, 0, 255);
         glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[2]);
 
         glBegin(GL_TRIANGLE_FAN);
