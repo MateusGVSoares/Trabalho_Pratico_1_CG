@@ -38,13 +38,13 @@ void World::start_mission(float *time)
     if (!stack_mission.empty())
         mission_handler(&stack_mission.front(), time);
 
-    if (*time > 7.0 && !stack_mission.empty())
+    if (*time > 7 && !stack_mission.empty() && troca < 1)
     {
+        troca++;
         *time = 0;
         stack_mission.pop();
         // troca a textura do background
-        // background.reset();
-        // background->setTexture(std::make_shared<Texturazer>("assets/scripts/background2.tscp"));
+        background->trocar_back();
         printf("entrou 2 roteiro, time =%0.2f\n", *time);
     }
 }
@@ -53,7 +53,7 @@ void World::start_mission(float *time)
 void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 {
 
-    vec3f_t str_aux;
+    vec3f_t str_aux, shooter_aux;
     std::shared_ptr<Enemy> shr_ptr;
     std::shared_ptr<Boss> shr_boss;
     // printf("now time is : %f\n",*time);
@@ -62,75 +62,74 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
         if ((*fase_script->begin()).time <= *time)
         {
-
-            // TODO fazer a logica de jogar de spawnar inimigos e chamar o vector pro colider
-            // qualquer id fora 0 é um inimigo
-            //  e seu id corresponde a um modelo que vai ser criado usando o metodo
-            // create_models que retornara um vec de struct com seus pontos
-            // para depois inicializar os modelos e bota no vec entidade
-            if ((*fase_script->begin()).id_enemy >= 0 && (*fase_script->begin()).id_enemy < 4)
-            {
-                // usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
-                str_aux.x = (*fase_script->begin()).x;
-                str_aux.y = (*fase_script->begin()).y;
-                str_aux.z = 0;
-
-                shr_ptr = std::make_shared<Enemy>(str_aux, 0.0f, 0.5f,
-                                                  create_models((*fase_script->begin()).id_enemy),
-                                                  create_models((*fase_script->begin()).id_enemy));
-                send_texture((*fase_script->begin()).id_enemy, shr_ptr);
-
-                vec_entitys.push_back(shr_ptr);
-                // printf("bool ta dentro = %d \n",vec_entitys[0]->tadentro());
-                // libera o smartpointer e libera o espaco
-            }
-
-            // id =4 ou 5 caso especial dos chefoes
             if ((*fase_script->begin()).id_enemy == 4 || (*fase_script->begin()).id_enemy == 5)
             {
-
-                // usa Classe do chefao para criar
-                // a create models pode ser usada ainda , pois ela so devolve o vector
-                // de pontos para ser usado do modelo apenas
-
-                // usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
                 str_aux.x = (*fase_script->begin()).x;
                 str_aux.y = (*fase_script->begin()).y;
                 str_aux.z = 0;
 
                 // usando smartpointer para nao da merda
                 // aloca um novo smartpointer dentro do vetor
-                shr_boss = std::make_shared<Boss>(str_aux,0,0.5,
-                                                    create_models((*fase_script->begin()).id_enemy)
-                                                    ,create_models((*fase_script->begin()).id_enemy));
-                send_texture((*fase_script->begin()).id_enemy,shr_boss);
-                vec_entitys.push_back(shr_boss);
-                // libera o smartpointer e libera o espaco
-            }
-
-            //id =0 é powerup
-            if((*fase_script->begin() ).id_enemy==0){
-
-                //TODO criar objeto PowerUP ou re-ultilizar o objeto Player//ou criar um tipo de 
-                //de inimigo novo com id diferente
-                
-                //usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
-                str_aux.x=(*fase_script->begin() ).x;
-                str_aux.y=(*fase_script->begin() ).y;
-                str_aux.z=0;
-
-                //usando smartpointer para nao da merda     
-                //aloca um novo smartpointer dentro do vetor
-                //trocar o pointer para powerup depois
-                shr_ptr = std::make_shared<Enemy>(str_aux, 0.0f, 0.5f,
+                shr_boss = std::make_shared<Boss>(str_aux,
+                                                  0,
+                                                  1.5f,
                                                   create_models((*fase_script->begin()).id_enemy),
                                                   create_models((*fase_script->begin()).id_enemy));
-                send_texture((*fase_script->begin()).id_enemy,shr_ptr);
-                shr_ptr.get()->setId(16);
+
+                send_texture((*fase_script->begin()).id_enemy, shr_boss);
+
+                vec_entitys.push_back(shr_boss);
+            }
+
+            else if ((*fase_script->begin()).id_enemy == 0)
+            {
+                str_aux.x = (*fase_script->begin()).x;
+                str_aux.y = (*fase_script->begin()).y;
+                str_aux.z = 0;
+
+                shr_ptr = std::make_shared<PowerUp>(str_aux, 0.0f, 1.0f, 0);
                 vec_entitys.push_back(shr_ptr);
-                //libera o smartpointer e libera o espaco
+            }
+            else if ((*fase_script->begin()).id_enemy == 7)
+            {
+                str_aux.x = (*fase_script->begin()).x;
+                str_aux.y = (*fase_script->begin()).y;
+                str_aux.z = 0;
 
+                shr_ptr = std::make_shared<PowerUp>(str_aux, 0.0f, 1.0f, 1);
+                vec_entitys.push_back(shr_ptr);
+            }
+            else
+            {
+                // usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
+                str_aux.x = (*fase_script->begin()).x;
+                str_aux.y = (*fase_script->begin()).y;
+                str_aux.z = 0;
 
+                // 1 e o RUNNER e o 6 e tbm um RUNNER, mas com textura diferenciada
+                if ((*fase_script->begin()).id_enemy == 1)
+                {
+                    shr_ptr = std::make_shared<Runner>(str_aux, 180, 2.0f, 0);
+                }
+                else if ((*fase_script->begin()).id_enemy == 6)
+                {
+                    shr_ptr = std::make_shared<Runner>(str_aux, 180, 2.0f, 1);
+                }
+                // Kamikaze
+                else if ((*fase_script->begin()).id_enemy == 2)
+                {
+                    shr_ptr = std::make_shared<Kamikaze>(str_aux, 0, 1.0f);
+                }
+                // Shooter
+                else if ((*fase_script->begin()).id_enemy == 3)
+                {
+                    shooter_aux.x = str_aux.x;
+                    shooter_aux.y = str_aux.y - 100;
+                    shooter_aux.z = 0;
+                    shr_ptr = std::make_shared<Shooter>(str_aux, 180, 3.0f, shooter_aux);
+                }
+
+                vec_entitys.push_back(shr_ptr);
             }
 
             printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ", *time, (*fase_script->begin()).time, (*fase_script->begin()).id_enemy, (*fase_script->begin()).x, (*fase_script->begin()).y);
@@ -143,6 +142,8 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
 World::World()
 {
+    actual_player.reset();
+
     colisor = new Colider();
     initbackGround();
     initPlayer();
@@ -151,7 +152,6 @@ World::World()
 // metodo para enviar os objetos que estao na tela para serem tratados pelo Colider
 std::vector<std::shared_ptr<Entidade>> World::send_to_colider(std::vector<std::shared_ptr<Entidade>> vec_hitbox)
 {
-
     // chama o colider
     return colisor->check_colison(vec_hitbox);
 }
@@ -167,32 +167,32 @@ std::vector<vec3f_t> World::create_models(int id)
     {
     // powerup
     case 0:
-        !parse_model(&aux, "assets/scripts/powerUp.mscp");
+        parse_model(&aux, "assets/scripts/powerUp.mscp");
         break;
 
     // inimigo que anda reto pra baixo
     case 1:
-        !parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
+        parse_model(&aux, "assets/scripts/inimigo_tipo1.mscp");
         break;
 
     // helicoptero que persegue
     case 2:
-        !parse_model(&aux, "assets/scripts/inimigo_tipo2.mscp");
+        parse_model(&aux, "assets/scripts/inimigo_tipo2.mscp");
         break;
 
     // inimigo que para e atira
     case 3:
-        !parse_model(&aux, "assets/scripts/inimigo_tipo3.mscp");
+        parse_model(&aux, "assets/scripts/inimigo_tipo3.mscp");
         break;
 
     // id = 4 é o chefao
     case 4:
-        !parse_model(&aux, "assets/scripts/chefao1.mscp");
+        parse_model(&aux, "assets/scripts/Boss.mscp");
         break;
 
     // Boss stage 2
     case 5:
-        !parse_model(&aux, "assets/scripts/chefao2.mscp");
+        parse_model(&aux, "assets/scripts/chefao2.mscp");
         break;
     }
 
@@ -208,12 +208,13 @@ void World::draw_vec_entitys()
     for (int x = 0; x < vec_entitys.size(); x++)
     {
 
-        if (vec_entitys.at(x)->getOnScreen())
+        if (vec_entitys.at(x)->alive) // e adicionar outra condição
         {
             to_colider.push_back(vec_entitys.at(x));
         }
         else
         {
+            printf("Deleted an entity of id %d \n", vec_entitys[x]->getId());
             vec_entitys.erase(vec_entitys.begin() + x);
             x--;
         }
@@ -242,8 +243,8 @@ void World::initPlayer()
         .y = 0,
         .z = 0};
 
-    joga = std::make_shared<Player>(origin, 0.0f, 1.0f, vector, vector);
-    vec_entitys.push_back(joga);
+    actual_player = std::make_shared<Player>(origin, 0.0f, 3.0f, vector, vector);
+    vec_entitys.push_back(actual_player);
 }
 
 void World::update_entitys(float *timer_count)
@@ -251,31 +252,31 @@ void World::update_entitys(float *timer_count)
 
     int shot = 0;
     // Updates the movements
-    if (joga != nullptr)
-        shot = joga->updateOnKeyboard(keyboard);
+    if (actual_player != nullptr)
+        shot = actual_player->updateOnKeyboard(keyboard);
 
-    if (shot && *timer_count > 0.3)
+    if (shot && actual_player->getTimer() > 0.3)
     {
-        *timer_count = 0;
-        vec_entitys.push_back(std::shared_ptr<Shot>(joga->playerFire()));
+        vec_entitys.push_back(std::shared_ptr<Shot>(actual_player->playerFire()));
     }
     int consta = vec_entitys.size();
-    for(int i =0;i<consta;i++){
+    for (int i = 0; i < consta; i++)
+    {
 
-        //printf(" id =%d , timer =%0.2f \n",vec_entitys.at(i)->getId(),vec_entitys.at(i)->getTimer()); 
-       if(vec_entitys.at(i)->getId() ==4  && vec_entitys.at(i)->getTimer()>1.0){
-            vec_entitys.push_back( std::shared_ptr<Shot>( ((Boss *)(vec_entitys.at(i).get()))->enemyFire()  ) );
-            //printf("entrou %d z\n",vec_entitys.at(i)->getId());
+        // printf(" id =%d , timer =%0.2f \n",vec_entitys.at(i)->getId(),vec_entitys.at(i)->getTimer());
+        if (vec_entitys.at(i)->getId() == 4 && vec_entitys.at(i)->getTimer() > 1.0)
+        {
+            vec_entitys.push_back(std::shared_ptr<Shot>(((Enemy *)(vec_entitys.at(i).get()))->enemyFire()));
+            // printf("entrou %d z\n",vec_entitys.at(i)->getId());
         }
-       if(vec_entitys.at(i)->getId() ==2  && vec_entitys.at(i)->getTimer()>1.0){
-            vec_entitys.push_back( std::shared_ptr<Shot>( ((Enemy *)(vec_entitys.at(i).get()))->enemyFire()  ) );
-            //printf("entrou %d z\n",vec_entitys.at(i)->getId());
-        }
-    }    
+    }
 
     for (int i = 0; i < vec_entitys.size(); i++)
     {
-        vec_entitys.at(i)->move();
+        if (vec_entitys.at(i)->getId() == 4)
+            ((Enemy *)vec_entitys.at(i).get())->move(this->actual_player->getOrigin());
+        else
+            vec_entitys.at(i)->move();
         vec_entitys.at(i)->updateModel();
     }
 
@@ -292,7 +293,7 @@ void World::send_texture(int id, std::shared_ptr<Enemy> shr_ptr)
     {
     // powerup
     case 0:
-        shr_ptr-> setTexture(std::make_shared<Texturazer>("assets/scripts/powerUp.tscp"));
+        shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/powerUp.tscp"));
         break;
 
     // inimigo que anda reto pra baixo
@@ -309,9 +310,9 @@ void World::send_texture(int id, std::shared_ptr<Enemy> shr_ptr)
     case 3:
         shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/inimigo_tipo3.tscp"));
         break;
-    //boss 1
+    // boss 1
     case 4:
-        shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/chefao1.tscp"));
+        shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/Boss.tscp"));
         break;
     case 5:
         shr_ptr->setTexture(std::make_shared<Texturazer>("assets/scripts/chefao2.tscp"));
@@ -343,7 +344,56 @@ void World::initbackGround()
     vec_entitys.push_back(background);
 }
 
-// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+// Por favor alguem me ajude >_< - RIP CAMISA 09
+void World::drawFancyStuff()
+{
+    // Desenha a barra de vida do player
+    vec3f_t aux = {0};
+    float divs;
+
+    // Verifica se tem um player na cena
+    if (this->actual_player != nullptr)
+    {
+        aux.x = -max_x;
+        aux.y = -max_y;
+
+        glDisable(GL_TEXTURE_2D);
+        // glDisable(GL_BLEND);
+        // Cor do Menu 130, 196, 209
+        glColor4ub(130, 196, 209,160);
+        glBegin(GL_TRIANGLE_FAN);
+
+        glVertex2f(aux.x + 15, aux.y + 35);
+        glVertex2f(aux.x + 15, aux.y + 15);
+
+        glVertex2f(aux.x + 70, aux.y + 15);
+        glVertex2f(aux.x + 70, aux.y + 35);
+
+        glEnd();
+
+        divs = 0;
+
+        // Divide pelo numero de vidas maxima do player
+        // HARDCODED LLLL
+        // printf("Hp do player : %d \n",actual_player->getHp());
+        divs += 45 * actual_player->hp/10.0f;
+
+        glColor4ub(255,0,0,160);
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(aux.x + 20, aux.y + 30);
+        glVertex2f(aux.x + 20, aux.y + 20);
+
+        glVertex2f(aux.x +  20 + divs, aux.y + 20);
+        glVertex2f(aux.x + 20 + divs, aux.y + 30);
+        glEnd();
+
+        // glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);
+    }
+
+    // Desenha a vida do boss
+    // if
+}
 
 void World::Credits()
 {

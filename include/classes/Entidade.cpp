@@ -9,7 +9,8 @@ Entidade::Entidade(vec3f_t origin, float angle, float velocidade)
     this->timer_control_texture = 0;
     this->const_anim_texture = 1.0 / 5.0;
     this->timer = 0;
-    this->cont_stage_tex=0;
+    this->cont_stage_tex = 0;
+    this->on_screen = 1;
 }
 
 bool Entidade::getOnScreen()
@@ -23,12 +24,14 @@ void Entidade::setTexture(std::shared_ptr<Texturazer> target)
     this->texture = target;
 }
 
-void Entidade::setConst(){
+void Entidade::setConst()
+{
 
     this->cont_stage_tex++;
 }
 
-float Entidade::getTimer(){
+float Entidade::getTimer()
+{
 
     return this->timer;
 }
@@ -40,7 +43,7 @@ int Entidade::getId()
 
 void Entidade::setId(int id)
 {
-    this->id=id;
+    this->id = id;
 }
 
 vec3f_t *Entidade::getOrigin()
@@ -53,6 +56,8 @@ void Entidade::updateModel()
     glPushMatrix();
     glTranslatef(this->origin.x, this->origin.y, this->origin.z);
     glRotatef(this->angle, 0, 0, 1);
+
+    bool aux_x_col = 0, aux_y_col = 0;
 
     // Obtem a transformacao
     float *matrix = new float[16];
@@ -76,10 +81,13 @@ void Entidade::updateModel()
 
     Matrix_t *result = NULL;
 
-    this->on_screen = 0;
+    this->on_screen = this->border_x_col = this->border_y_col = 0;
 
     for (int i = 0; i < this->box_model.size(); i++)
     {
+        aux_x_col = 0;
+        aux_y_col = 0;
+
         // Pega os pontos do modelo de hit_box na origem
         point->mat[0][0] = this->box_model[i].x;
         point->mat[1][0] = this->box_model[i].y;
@@ -105,7 +113,19 @@ void Entidade::updateModel()
         //     std::cout << "Freed !! \n";
         // }
 
-        if (this->hit_box[i].x <= max_x && this->hit_box[i].x >= -max_x && this->hit_box[i].y<max_y &&this->hit_box[i].y> - max_y)
+        if ((this->hit_box[i].x >= max_x) || (this->hit_box[i].x <= -max_x))
+        {
+            this->border_x_col = 1;
+            aux_x_col = 1;
+        }
+
+        if ((this->hit_box[i].y >= max_y) || (this->hit_box[i].y <= -max_y))
+        {
+            this->border_y_col = 1;
+            aux_y_col = 1;
+        }
+
+        if ((!aux_x_col) && (!aux_y_col))
         {
             this->on_screen = 1;
         }

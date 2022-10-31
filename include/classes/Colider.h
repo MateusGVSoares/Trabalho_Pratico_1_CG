@@ -4,6 +4,8 @@
 #include <vector>
 #include <set>
 #include "Entidade.h"
+#include "Player.h"
+#include "Spaceships.h"
 #include "../algebra.h"
 //Classe Colider que vai ser responsavel de chamar a colisão
 //e decidir o que sera feito na hora da colisão

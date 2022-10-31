@@ -19,10 +19,16 @@ Background::Background(vec3f_t origin,
     this->cont_stage_tex = 1;
     this->const_anim_texture = 0.04428;
     this->timer_control_texture = 0.2;
-
+    this->cont_stage_tex=0;
+    this->velocidade=1;
     this->id = -1;
 };
 
+void Background::start_boss(){
+
+    velocidade=5;
+
+}
 
 void Background::move()
 {
@@ -37,7 +43,7 @@ void Background::draw()
     this->model[2].x = max_x;
     this->model[3].x = -max_x;
     
-    const_anim_texture += 0.001;
+    const_anim_texture += 0.001*this->velocidade;
 
     glPushMatrix();
 
@@ -47,7 +53,7 @@ void Background::draw()
     glColor3ub(155, 155, 155);
 
     // Carrega o objeto de textura para manipular no OpenGL
-    glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[0]);
+    glBindTexture(GL_TEXTURE_2D, this->texture->loaded_textures[this->cont_stage_tex]);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -72,6 +78,10 @@ void Background::draw()
 
     glPopMatrix();
 };
+
+void Background::trocar_back(){
+    this->cont_stage_tex++;
+}
 
 int Background::destroy()
 {
