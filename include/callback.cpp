@@ -119,7 +119,7 @@ void reshapeFct(int width, int height)
         if (((float)width / (float)height) != razaoAspecto && !reshaping)
         {
             reshaping = 1;
-            glutReshapeWindow(width, width * (1/razaoAspecto));
+            glutReshapeWindow(width, (int)(width * (1/razaoAspecto)));
         }
         else
             reshaping = 0;
@@ -130,7 +130,7 @@ void reshapeFct(int width, int height)
         if (((float)width / (float)height) != razaoAspecto && !reshaping)
         {
             reshaping = 1;
-            glutReshapeWindow(height * razaoAspecto, height);
+            glutReshapeWindow((int)(height * razaoAspecto), height);
         }
         else
             reshaping = 0;

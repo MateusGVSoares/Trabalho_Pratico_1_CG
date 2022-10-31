@@ -16,7 +16,6 @@ class Player : public Entidade
 {
 private:
     int vidas;
-    int select_shot;
     int level_gun1;
     int level_gun2;
     float timer_troca_gun;
@@ -26,6 +25,7 @@ private:
 
 public:
     int hp;
+    int select_shot;
     Player(vec3f_t origin, float angle, float velocidade, std::vector<vec3f_t> hit_box, std::vector<vec3f_t> model);
     using Entidade::Entidade;
     Shot *playerFire();

@@ -59,13 +59,16 @@ void drawUpdate()
         menu->draw();
     }
     // inicia o jogo
-    if (menu->flagpermission == 1)
+    if (menu->flagpermission == 1 && mundo->warping==0)
     {
 
         glEnable(GL_TEXTURE_2D);
         mundo->draw_vec_entitys();
         mundo->drawFancyStuff();
         glDisable(GL_TEXTURE_2D);
+    }
+    if(menu->flagpermission == 1 && mundo->warping==1){
+        mundo->draw_warp();
     }
 
     glutSwapBuffers();
@@ -92,10 +95,16 @@ void onTimeUpdate(int time)
             startMenu();
             startMundo();
         }
-        else
+        else if(mundo->warping==0)
         {
+            //printf("mundo main \n");
             mundo->update_entitys(&timer_count);
         }
+        else if(world_time>2.0){
+            //printf("estou aqui\n");
+            mundo->warping=0;
+        }
+
     }
 
     if (menu->flagpermission == 2)

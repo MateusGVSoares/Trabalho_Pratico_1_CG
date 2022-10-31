@@ -21,18 +21,17 @@ void World::initialize_script_mission()
     */
     //printf("entrou AQUI NESSA MERDA\n");
     // missao 2
-    if(troca_mission==1){
-        printf("entrou AQUI mission 2\n");
-        parse_mission(&aux, "assets/scripts/roteiro2");
+    // missao 1
+    if(troca_mission==0){
+        //printf("entrou AQUI mission 1\n");
+        parse_mission(&aux, "assets/scripts/roteiro1");
         this->stack_mission.push(aux);
         aux.clear();
         troca_mission++;
     }
-
-    // missao 1
-    if(troca_mission==0){
-        printf("entrou AQUI mission 1\n");
-        parse_mission(&aux, "assets/scripts/roteiro1");
+    if(troca_mission==1){
+        //printf("entrou AQUI mission 2\n");
+        parse_mission(&aux, "assets/scripts/roteiro2");
         this->stack_mission.push(aux);
         aux.clear();
         troca_mission++;
@@ -42,21 +41,26 @@ void World::initialize_script_mission()
 
 void World::start_mission(float *time)
 {
-
+    //printf("warp = %d \n",warping);
     // criamos um vetor auxiliar para retirar os vetores(vetor=o roteiro de uma fase) que estao na queue
-
-    if (!stack_mission.empty() )
+    //printf("size stack =%d \n",stack_mission.size());
+    if (!stack_mission.empty() ){
         mission_handler(&stack_mission.front(), time);
+    }
 
-    if (*time > 90.0 && !stack_mission.empty() && troca < 1)
+    //printf("stack queue = %d ",(stack_mission.front()).begin()->time);
+
+
+    if (*time > 135.0 && stack_mission.front().size()==0)
     {
-    
+        stack_mission.pop();
+        warping=1;
         troca++;
         *time = 0;
         initialize_script_mission();
         // troca a textura do background
         background->trocar_back();
-        printf("entrou 2 roteiro, time =%0.2f\n", *time);
+        //printf("entrou 2 roteiro, time =%0.2f\n", *time);
     }
 }
 
@@ -73,13 +77,14 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
         if ((*fase_script->begin()).time <= *time)
         {
+            str_aux.x = (*fase_script->begin()).x * razaoAspecto;
+            str_aux.y = (*fase_script->begin()).y;
+            str_aux.z = 0;
+
             if ((*fase_script->begin()).id_enemy == 4 )
             {
                 //printf("criando boss \n");
-                str_aux.x = (*fase_script->begin()).x;
-                str_aux.y = (*fase_script->begin()).y;
-                str_aux.z = 0;
-
+             
                 // usando smartpointer para nao da merda
                 // aloca um novo smartpointer dentro do vetor
                 shr_boss = std::make_shared<Boss>(str_aux,
@@ -96,29 +101,16 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
 
             else if ((*fase_script->begin()).id_enemy == 0)
             {
-                str_aux.x = (*fase_script->begin()).x;
-                str_aux.y = (*fase_script->begin()).y;
-                str_aux.z = 0;
-
                 shr_ptr = std::make_shared<PowerUp>(str_aux, 0.0f, 1.0f, 0);
                 vec_entitys.push_back(shr_ptr);
             }
             else if ((*fase_script->begin()).id_enemy == 7)
             {
-                str_aux.x = (*fase_script->begin()).x;
-                str_aux.y = (*fase_script->begin()).y;
-                str_aux.z = 0;
-
                 shr_ptr = std::make_shared<PowerUp>(str_aux, 0.0f, 1.0f, 1);
                 vec_entitys.push_back(shr_ptr);
             }
             else
             {
-                // usando str_aux para auxiliar a criação dos objetos inimigos lidos no arquivo txt pelo parser
-                str_aux.x = (*fase_script->begin()).x;
-                str_aux.y = (*fase_script->begin()).y;
-                str_aux.z = 0;
-
                 // 1 e o RUNNER e o 6 e tbm um RUNNER, mas com textura diferenciada
                 if ((*fase_script->begin()).id_enemy == 1)
                 {
@@ -149,10 +141,11 @@ void World::mission_handler(std::list<mission_wave> *fase_script, float *time)
                 vec_entitys.push_back(shr_ptr);
             }
 
-            printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ", *time, (*fase_script->begin()).time, (*fase_script->begin()).id_enemy, (*fase_script->begin()).x, (*fase_script->begin()).y);
+            //printf("tempo =%0.2f ,i.time=%0.2f , id=%d ,x=%0.2f ,y=%0.2f \n ", *time, (*fase_script->begin()).time, (*fase_script->begin()).id_enemy, (*fase_script->begin()).x, (*fase_script->begin()).y);
 
             // retira o elemento da lista.
             fase_script->pop_front();
+            printf("numero elemetos tela =%d \n",fase_script->size());
         }
     }
 }
@@ -163,6 +156,7 @@ World::World()
     this->troca_mission=0;
     this->vida_player=2;
     this->troca=0;
+    this->warping=0;
     colisor = new Colider();
     initbackGround();
     initPlayer();
@@ -388,6 +382,29 @@ int World::mission_reset(){
         return 0;
 
 }
+void World::draw_warp(){
+
+    char * aux_str = new char[60];
+    glPushMatrix();
+        glColor3b(255,255,255);
+        if(glutGet(GLUT_WINDOW_WIDTH)/1920.0f > 0.5)
+        {
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_24,-30, 0,130, 196, 209,160);
+
+            sprintf(aux_str,"WARPPING");
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_24,-30,0,130, 196, 209,160);
+        }
+        else
+        {
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_10,-30, 0,130, 196, 209,160);
+            sprintf(aux_str,"WARPPING");
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_10,-30,0,130, 196, 209,160);
+        }
+    glPopMatrix();
+
+    delete aux_str;
+
+}
 
 // Por favor alguem me ajude >_< - RIP CAMISA 09
 void World::drawFancyStuff()
@@ -395,6 +412,7 @@ void World::drawFancyStuff()
     // Desenha a barra de vida do player
     vec3f_t aux = {0};
     float divs;
+    char * aux_str = new char[60];
 
     // Verifica se tem um player na cena
     if (this->actual_player != nullptr)
@@ -424,6 +442,7 @@ void World::drawFancyStuff()
         divs += 45 * actual_player->hp/10.0f;
 
         glColor4ub(0,255,0,160);
+
         glBegin(GL_TRIANGLE_FAN);
         glVertex2f(aux.x + 20, aux.y + 30);
         glVertex2f(aux.x + 20, aux.y + 20);
@@ -432,7 +451,35 @@ void World::drawFancyStuff()
         glVertex2f(aux.x + 20 + divs, aux.y + 30);
         glEnd();
 
-        print("[HP]",GLUT_BITMAP_TIMES_ROMAN_24,aux.x + 20,aux.y + 45,0,255,0,160);
+
+        if(glutGet(GLUT_WINDOW_WIDTH)/1920.0f > 0.5)
+            print("[HP]",GLUT_BITMAP_TIMES_ROMAN_24,aux.x + 20,aux.y + 45,130, 196, 209,160);
+        else
+            print("[HP]",GLUT_BITMAP_TIMES_ROMAN_10,aux.x + 20,aux.y + 45,130, 196, 209,160);
+        
+        // Offset para o outro canto da tela
+        aux.x = max_x;
+
+
+        sprintf(aux_str,"WEAPON [%d]",this->actual_player->select_shot == 1 ? 0 : 1);
+        
+
+        if(glutGet(GLUT_WINDOW_WIDTH)/1920.0f > 0.5)
+        {
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_24,aux.x - 100, aux.y + 40,130, 196, 209,160);
+
+            sprintf(aux_str,"PONTOS [%d]",this->pontos);
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_24,aux.x - 100,aux.y + 65,130, 196, 209,160);
+        }
+        else
+        {
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_10,aux.x - 110, aux.y + 40,130, 196, 209,160);
+            sprintf(aux_str,"PONTOS [%d]",this->pontos);
+            print(aux_str,GLUT_BITMAP_TIMES_ROMAN_10,aux.x - 110,aux.y + 65,130, 196, 209,160);
+        }
+
+
+        // print(aux_str,GLUT_BITMAP_TIMES_ROMAN_24,aux.x - 50,aux.y + 45,0,255,0,160);
         
         // glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
@@ -477,6 +524,7 @@ void World::drawFancyStuff()
         // glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
     }
+    delete aux_str;
 }
 
 void World::Credits()

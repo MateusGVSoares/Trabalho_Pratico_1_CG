@@ -78,7 +78,7 @@ int Texturazer::parse_script(const char *file_name)
 
         // Lê o resto da linha para ir para a próxima
         file->getline(input_str, 50);
-
+        
         // Obtem o nome do arquivo de textura
         file->getline(input_str, 100);
         //printf("nome = %s\n", input_str);

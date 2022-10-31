@@ -20,13 +20,13 @@ Background::Background(vec3f_t origin,
     this->const_anim_texture = 0.04428;
     this->timer_control_texture = 0.2;
     this->cont_stage_tex=0;
-    this->velocidade=1;
+    this->velocidade=0.7;
     this->id = -1;
 };
 
 void Background::start_boss(){
 
-    velocidade=5;
+    velocidade=2.1;
 
 }
 

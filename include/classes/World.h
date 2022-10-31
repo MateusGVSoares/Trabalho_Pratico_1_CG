@@ -35,9 +35,12 @@ private:
     std::shared_ptr<Background> background;
 
 public:
+    int warping;
     World();
 
     void drawFancyStuff();
+
+    void draw_warp();
 
     // botar os roteiros das missions na queue para poder usar a start_mission
     void initialize_script_mission();
